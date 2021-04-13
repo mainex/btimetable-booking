@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "testdatabase.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,12 +19,12 @@ public:
         std::string email, telephone;
 
         void enterId();
-
+        dataBase::TestDataBase testDataBase;
         void enterTelephone();
 
         void enterEmail();
 
-        static bool isValidId(std::string);
+        bool isValidId(std::string);
 
         static bool isValidTelephone(std::string);
 

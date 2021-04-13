@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include "entities.h"
+#include "testdatabase.h"
 
 int main(int argc, char *argv[])
 {

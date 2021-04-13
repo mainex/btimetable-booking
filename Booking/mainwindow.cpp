@@ -1,11 +1,13 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "testdatabase.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    testDataBase.make();
     connect(ui->pushButton, &QPushButton::clicked, [this]{
        ui->idLabel->setText(ui->enterIdLineEdit->text());
        ui->emailLabel->setText(ui->enterEmailLineEdit->text());
@@ -82,6 +84,21 @@ bool MainWindow::isValidEmail(std::string str) {
     return true;
 }
 
-bool MainWindow::isValidId(std::string) {
-    return true;
+bool MainWindow::isValidId(std::string input) {
+    bool answer = true;
+    for (auto symbol : input) {
+        if (symbol < '0' || symbol > '9') {
+            answer = false;
+        }
+    }
+    if (answer) {
+        int id = stoll(input, nullptr, 10);
+        answer = false;
+        for (auto comp : testDataBase.companies) {
+            if (comp.findOrder(id) != nullptr) {
+                answer = true;
+            }
+        }
+    }
+   return answer;
 }
