@@ -1,0 +1,6 @@
+# ninja log v5
+5	780	6368142697453760	Booking_autogen/timestamp	c987145d86299ebd
+781	5649	6368142746084831	CMakeFiles/Booking.dir/Booking_autogen/mocs_compilation.cpp.obj	c7f814532cfa8f1d
+811	5977	6368142748973774	CMakeFiles/Booking.dir/main.cpp.obj	375a68b9c806025a
+798	6323	6368142752593726	CMakeFiles/Booking.dir/mainwindow.cpp.obj	a5af421a166d2a41
+6324	8940	6368142777137946	Booking.exe	ba8d044921d5fb84

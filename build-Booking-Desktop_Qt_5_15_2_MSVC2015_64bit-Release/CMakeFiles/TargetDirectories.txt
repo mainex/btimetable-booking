@@ -1,0 +1,5 @@
+C:/Booking/build-Booking-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/CMakeFiles/edit_cache.dir
+C:/Booking/build-Booking-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/CMakeFiles/Booking.dir
+C:/Booking/build-Booking-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/CMakeFiles/rebuild_cache.dir
+C:/Booking/build-Booking-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/CMakeFiles/Booking_autogen_timestamp_deps.dir
+C:/Booking/build-Booking-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/CMakeFiles/Booking_autogen.dir

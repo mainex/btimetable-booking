@@ -1,0 +1,77 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Booking",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Booking::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Booking-Debug-ac03dd18edb7876ace0d.json",
+					"name" : "Booking",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Booking_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Booking_autogen-Debug-237c86fcfe51dc8952a4.json",
+					"name" : "Booking_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Booking_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Booking_autogen_timestamp_deps-Debug-b479c38299e7df87ce7f.json",
+					"name" : "Booking_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Booking/build-Booking-Desktop_Qt_5_15_2_MSVC2015_64bit-Debug",
+		"source" : "C:/Booking/Booking"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 2
+	}
+}

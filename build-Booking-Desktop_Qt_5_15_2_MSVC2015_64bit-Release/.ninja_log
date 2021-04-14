@@ -1,0 +1,27 @@
+# ninja log v5
+6	515	6368197461340682	Booking_autogen/timestamp	5581256c876365c9
+516	4223	6368197498200705	CMakeFiles/Booking.dir/Booking_autogen/mocs_compilation.cpp.obj	64d75a101ba1915f
+480	4139	6368195859785453	CMakeFiles/Booking.dir/mainwindow.cpp.obj	ee740bd96473944
+1	56	0	CMakeFiles/clean.additional	321391b2684b2653
+525	4461	6368197500681548	CMakeFiles/Booking.dir/main.cpp.obj	d249c9f6c492936
+4139	4872	6368195866738493	Booking.exe	113f54644b544bc6
+57	77	0	clean	577b940aee94fbd7
+1	56	0	CMakeFiles/clean.additional	321391b2684b2653
+57	76	0	clean	577b940aee94fbd7
+6	523	6368197710721745	Booking_autogen/timestamp	5581256c876365c9
+525	4095	6368197746151812	CMakeFiles/Booking.dir/Booking_autogen/mocs_compilation.cpp.obj	64d75a101ba1915f
+535	4451	6368197749940304	CMakeFiles/Booking.dir/main.cpp.obj	d249c9f6c492936
+1	55	0	CMakeFiles/clean.additional	321391b2684b2653
+56	74	0	clean	577b940aee94fbd7
+4	504	6368198917881516	Booking_autogen/timestamp	5581256c876365c9
+504	4752	6368198960121505	CMakeFiles/Booking.dir/Booking_autogen/mocs_compilation.cpp.obj	64d75a101ba1915f
+513	4872	6368198961401459	CMakeFiles/Booking.dir/main.cpp.obj	d249c9f6c492936
+523	5352	6368198966301858	CMakeFiles/Booking.dir/mainwindow.cpp.obj	ee740bd96473944
+5353	6289	6368198974886465	Booking.exe	113f54644b544bc6
+1	52	0	CMakeFiles/clean.additional	321391b2684b2653
+53	71	0	clean	577b940aee94fbd7
+4	437	6368203002540686	Booking_autogen/timestamp	5581256c876365c9
+437	3391	6368203031945320	CMakeFiles/Booking.dir/Booking_autogen/mocs_compilation.cpp.obj	64d75a101ba1915f
+446	3676	6368203034761245	CMakeFiles/Booking.dir/main.cpp.obj	d249c9f6c492936
+454	4266	6368203040770650	CMakeFiles/Booking.dir/mainwindow.cpp.obj	ee740bd96473944
+4267	5297	6368203050672167	Booking.exe	113f54644b544bc6
