@@ -1,39 +1,71 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "testdatabase.h"
+#include "QStandardItemModel"
+#include "QStandardItem"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    testDataBase.make();
+    QStandardItemModel *model = new QStandardItemModel;
+    QStandardItem *item;
+
+    //Заголовки столбцов
+    QStringList horizontalHeader;
+    horizontalHeader.append("ID события");
+    horizontalHeader.append("ID мастера");
+    horizontalHeader.append("Время начала");
+    horizontalHeader.append("Продолжительность");
+
+    model->setHorizontalHeaderLabels(horizontalHeader);
+    ui->tableView->setModel(model);
+    int k = 0;
+    for (size_t i = 0; i < testDataBase.companies.size(); ++i) {
+        for (size_t j = 0; j < testDataBase.companies[i].listVacantOrders().size(); ++j) {
+            dataBase::Order order = *testDataBase.companies[i].listVacantOrders()[j];
+            item = new QStandardItem(QString(std::to_string(order.id).c_str()));
+            model->setItem(k, 0, item);
+            item = new QStandardItem(QString(std::to_string(order.employee_id).c_str()));
+            model->setItem(k, 1, item);
+            item = new QStandardItem(QString(std::to_string(order.time_start).c_str()));
+            model->setItem(k, 2, item);
+            item = new QStandardItem(QString(std::to_string(order.duration).c_str()));
+            model->setItem(k, 3, item);
+            ++k;
+        }
+    }
+    ui->tableView->resizeRowsToContents();
+    ui->tableView->resizeColumnsToContents();
+    ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
     connect(ui->pushButton, &QPushButton::clicked, [this]{
-       ui->idLabel->setText(ui->enterIdLineEdit->text());
-       ui->emailLabel->setText(ui->enterEmailLineEdit->text());
-       ui->telephoneLabel->setText(ui->enterTelephoneLineEdit->text());
-       if(isValidTelephone(ui->enterTelephoneLineEdit->text().toStdString())) {
-           ui->isTelephoneOkLabel->setText("Good");
-       } else {
-           ui->isTelephoneOkLabel->setText("Bad");
-       }
-       if(isValidEmail(ui->enterEmailLineEdit->text().toStdString())) {
-           ui->isEmailOkLabel->setText("Good");
-       } else {
-           ui->isEmailOkLabel->setText("Bad");
-       }
-       if(isValidId(ui->enterIdLineEdit->text().toStdString())) {
-           ui->isIdOkLabel->setText("Good");
-       } else {
-           ui->isIdOkLabel->setText("Bad");
-       }
-       if (ui->isIdOkLabel->text().toStdString() == "Good" &&
-               ui->isEmailOkLabel->text().toStdString() == "Good" &&
-               ui->isTelephoneOkLabel->text().toStdString() == "Good") {
-           ui->label->setText("Данные корректны!");
-       } else {
-           ui->label->setText("Проверьте введенные данные, бронирование не завершено.");
-       }
+        ui->idLabel->setText(ui->enterIdLineEdit->text());
+        ui->emailLabel->setText(ui->enterEmailLineEdit->text());
+        ui->telephoneLabel->setText(ui->enterTelephoneLineEdit->text());
+        if(isValidTelephone(ui->enterTelephoneLineEdit->text().toStdString())) {
+            ui->isTelephoneOkLabel->setText("Good");
+        } else {
+            ui->isTelephoneOkLabel->setText("Bad");
+        }
+        if(isValidEmail(ui->enterEmailLineEdit->text().toStdString())) {
+            ui->isEmailOkLabel->setText("Good");
+        } else {
+            ui->isEmailOkLabel->setText("Bad");
+        }
+        if(isValidId(ui->enterIdLineEdit->text().toStdString())) {
+            ui->isIdOkLabel->setText("Good");
+        } else {
+            ui->isIdOkLabel->setText("Bad");
+        }
+        if (ui->isIdOkLabel->text().toStdString() == "Good" &&
+                ui->isEmailOkLabel->text().toStdString() == "Good" &&
+                ui->isTelephoneOkLabel->text().toStdString() == "Good") {
+            ui->label->setText("Данные корректны!");
+        } else {
+            ui->label->setText("Проверьте введенные данные, бронирование не завершено.");
+        }
     });
 }
 
@@ -100,5 +132,5 @@ bool MainWindow::isValidId(std::string input) {
             }
         }
     }
-   return answer;
+    return answer;
 }

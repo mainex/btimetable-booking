@@ -5,7 +5,7 @@
 #include "testdatabase.h"
 
 namespace dataBase {
-    void TestDataBase::make() {
+    TestDataBase::TestDataBase() {
         Company A = Company("A");
         Employee emp1 = Employee(436472472, "Anna"), emp2 = Employee(36273672, "Vera"), emp3 = Employee(7446254,
                                                                                                         "Ivan");

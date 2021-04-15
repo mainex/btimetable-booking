@@ -19,7 +19,7 @@ public:
         std::string email, telephone;
 
         void enterId();
-        dataBase::TestDataBase testDataBase;
+        dataBase::TestDataBase testDataBase = dataBase::TestDataBase();
         void enterTelephone();
 
         void enterEmail();

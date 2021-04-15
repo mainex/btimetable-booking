@@ -18,17 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Доступные события:
-Компания A:
-ID события: 1, ID мастера: 436472472, Время: 0, Продолжительность: 3
-ID события: 2, ID мастера: 436472472, Время: 6, Продолжительность: 2
-ID события: 3, ID мастера: 7446254, Время: 9, Продолжительность: 1
-ID события: 4, ID мастера: 36273672, Время: 1, Продолжительность: 1
-ID события: 5, ID мастера: 7446254, Время: 6, Продолжительность: 2</string>
-        </property>
-       </widget>
+       <widget class="QTableView" name="tableView"/>
       </item>
       <item>
        <layout class="QFormLayout" name="formLayout_3">

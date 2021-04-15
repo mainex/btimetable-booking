@@ -13,8 +13,7 @@ namespace dataBase {
     public:
         std::vector<Company> companies;
 
-        void make();
-
+        TestDataBase();
     };
 }
 
