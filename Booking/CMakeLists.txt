@@ -35,6 +35,12 @@ set(PROJECT_SOURCES
         entities.cpp
         testdatabase.cpp
 )
+add_library(btt STATIC IMPORTED)
+set_target_properties(btt PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/btt.lib)
+add_library(hiredis STATIC IMPORTED)
+set_target_properties(hiredis PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/hiredis_static.lib)
+add_library(redis++ STATIC IMPORTED)
+set_target_properties(redis++ PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/redis++_static.lib)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Booking
@@ -53,3 +59,6 @@ else()
 endif()
 
 target_link_libraries(Booking PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Booking PRIVATE btt)
+target_link_libraries(Booking PRIVATE hiredis)
+target_link_libraries(Booking PRIVATE redis++)

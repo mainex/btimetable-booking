@@ -9,12 +9,12 @@
 #include <vector>
 
 namespace dataBase {
-    class TestDataBase {
+    /*class TestDataBase {
     public:
         std::vector<Company> companies;
 
         TestDataBase();
-    };
+    };*/
 }
 
 #endif //BTIMETABLE_TESTDATABASE_H

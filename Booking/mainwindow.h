@@ -15,11 +15,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    long long id = -1;
+    /*long long id = -1;
         std::string email, telephone;
 
         void enterId();
-        dataBase::TestDataBase testDataBase = dataBase::TestDataBase();
+        //dataBase::TestDataBase testDataBase = dataBase::TestDataBase();
         void enterTelephone();
 
         void enterEmail();
@@ -28,7 +28,7 @@ public:
 
         static bool isValidTelephone(std::string);
 
-        static bool isValidEmail(std::string);
+        static bool isValidEmail(std::string);*/
 
 private:
     Ui::MainWindow *ui;

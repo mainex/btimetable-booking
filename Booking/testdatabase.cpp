@@ -3,7 +3,7 @@
 //
 
 #include "testdatabase.h"
-
+/*
 namespace dataBase {
     TestDataBase::TestDataBase() {
         Company A = Company("A");
@@ -22,3 +22,4 @@ namespace dataBase {
         companies.push_back(A);
     }
 }
+*/

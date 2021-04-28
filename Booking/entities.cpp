@@ -1,7 +1,7 @@
 #include "entities.h"
 
 namespace dataBase {
-
+/*
     template<typename T>
     void Holder<T>::add(T value) {
         auto element = new T(std::move(value));
@@ -153,5 +153,5 @@ namespace dataBase {
     void Order::stdPrint() const {
         std::cout << "Order:{" << id << ", " << time_start << ", " << duration << ", " << client_id << ", "
                   << employee_id << "}";
-    }
+    }*/
 }
