@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     QStandardItem *item;
 
     QStringList horizontalHeader;
-    horizontalHeader.append("Наименование");
+    horizontalHeader.append("ID события");
     horizontalHeader.append("Мастер");
     horizontalHeader.append("Время начала");
     horizontalHeader.append("Продолжительность");
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
         auto orders = dataBase::ClientAPI::listVacantOrdersOfCompany(companies[i]);
         for (auto idOfOrder : orders) {
             auto order = dataBase::ClientAPI::getOrderById(idOfOrder);
-            item = new QStandardItem(QString(order.title.c_str()));
+            item = new QStandardItem(QString(std::to_string(order.id).c_str()));
             model->setItem(k, 0, item);
             auto master = dataBase::ClientAPI::getEmployeeById(order.employeeId);
             item = new QStandardItem(QString(master.fullName.c_str()));
