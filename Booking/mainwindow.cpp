@@ -24,12 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     model->setHorizontalHeaderLabels(horizontalHeader);
     ui->tableView->setModel(model);
-    int k = 0;
     auto companies = dataBase::ClientAPI::listCompanies();
     for (size_t i = 0; i < companies.size(); ++i) {
         auto orders = dataBase::ClientAPI::listVacantOrdersOfCompany(companies[i]);
-        for (auto idOfOrder : orders) {
-            auto order = dataBase::ClientAPI::getOrderById(idOfOrder);
+        for (size_t k = 0; k < orders.size(); ++k) {
+            auto order = dataBase::ClientAPI::getOrderById(orders[k]);
             item = new QStandardItem(QString(std::to_string(order.id).c_str()));
             model->setItem(k, 0, item);
             auto master = dataBase::ClientAPI::getEmployeeById(order.employeeId);
@@ -39,7 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
             model->setItem(k, 2, item);
             item = new QStandardItem(QString(std::to_string(order.duration).c_str()));
             model->setItem(k, 3, item);
-            ++k;
         }
     }
     ui->tableView->verticalHeader()->hide();
