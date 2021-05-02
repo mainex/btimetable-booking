@@ -104,12 +104,12 @@ bool MainWindow::isValidTelephone(std::string str) {
 }
 
 bool MainWindow::isValidEmail(std::string str) {
-    int posOfFirstAt = str.find_first_of('@'), posOfLastAt = str.find_last_of('@');
+    unsigned long long posOfFirstAt = str.find_first_of('@'), posOfLastAt = str.find_last_of('@');
     if (posOfFirstAt != posOfLastAt || posOfFirstAt == std::string::npos) {
         return false;
     }
 
-    int posOfLastDot = str.find_last_of('.');
+    unsigned long long posOfLastDot = str.find_last_of('.');
     if (posOfLastDot == str.size() - 1 || posOfLastDot == std::string::npos) {
         return false;
     }
