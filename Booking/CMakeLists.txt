@@ -33,7 +33,6 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         entities.cpp
-        testdatabase.cpp
 )
 add_library(btt STATIC IMPORTED)
 set_target_properties(btt PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/btt.lib)

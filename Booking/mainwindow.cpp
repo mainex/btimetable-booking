@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "testdatabase.h"
 #include "QStandardItemModel"
 #include "QStandardItem"
 #include <QtSql/QSqlDatabase>
@@ -14,31 +13,31 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    /*QStandardItemModel *model = new QStandardItemModel;
+    QStandardItemModel *model = new QStandardItemModel;
     QStandardItem *item;
 
-    //Заголовки столбцов
     QStringList horizontalHeader;
     horizontalHeader.append("ID события");
-    horizontalHeader.append("ID мастера");
+    horizontalHeader.append("Мастер");
     horizontalHeader.append("Время начала");
     horizontalHeader.append("Продолжительность");
 
     model->setHorizontalHeaderLabels(horizontalHeader);
     ui->tableView->setModel(model);
-    int k = 0;*/
-    /*for (size_t i = 0; i < testDataBase.companies.size(); ++i) {
-        for (size_t j = 0; j < testDataBase.companies[i].; ++j) {
-            dataBase::Order order = *testDataBase.companies[i].listVacantOrders()[j];
+    auto companies = dataBase::ClientAPI::listCompanies();
+    for (size_t i = 0; i < companies.size(); ++i) {
+        auto orders = dataBase::ClientAPI::listVacantOrdersOfCompany(companies[i]);
+        for (size_t k = 0; k < orders.size(); ++k) {
+            auto order = dataBase::ClientAPI::getOrderById(orders[k]);
             item = new QStandardItem(QString(std::to_string(order.id).c_str()));
             model->setItem(k, 0, item);
-            item = new QStandardItem(QString(std::to_string(order.employee_id).c_str()));
+            auto master = dataBase::ClientAPI::getEmployeeById(order.employeeId);
+            item = new QStandardItem(QString(master.fullName.c_str()));
             model->setItem(k, 1, item);
-            item = new QStandardItem(QString(std::to_string(order.time_start).c_str()));
+            item = new QStandardItem(QString(std::to_string(order.timeStart).c_str()));
             model->setItem(k, 2, item);
             item = new QStandardItem(QString(std::to_string(order.duration).c_str()));
             model->setItem(k, 3, item);
-            ++k;
         }
     }
     ui->tableView->verticalHeader()->hide();
@@ -73,25 +72,12 @@ MainWindow::MainWindow(QWidget *parent)
             ui->label->setText("Проверьте данные, бронирование не завершено.");
         }
     });
-*/
-    connect(ui->pushButton_2, &QPushButton::clicked, [this]{
-        auto c = dataBase::ClientAPI::createClient("1000", "2!!!", "3???");
-            std::cout << c.id << " "
-                      << c.fullName << " "
-                      << c.phoneNumber << " "
-                      << c.email << "\n";
-            auto d = dataBase::ClientAPI::getClientById(c.id);
-            std::cout << d.id << " "
-                      << d.fullName << " "
-                      << d.phoneNumber << " "
-                      << d.email << "\n";
-    });
 }
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-/*
+
 bool MainWindow::isValidTelephone(std::string str) {
     if (str.size() != 16) {
         return false;
@@ -118,12 +104,12 @@ bool MainWindow::isValidTelephone(std::string str) {
 }
 
 bool MainWindow::isValidEmail(std::string str) {
-    int posOfFirstAt = str.find_first_of('@'), posOfLastAt = str.find_last_of('@');
+    unsigned long long posOfFirstAt = str.find_first_of('@'), posOfLastAt = str.find_last_of('@');
     if (posOfFirstAt != posOfLastAt || posOfFirstAt == std::string::npos) {
         return false;
     }
 
-    int posOfLastDot = str.find_last_of('.');
+    unsigned long long posOfLastDot = str.find_last_of('.');
     if (posOfLastDot == str.size() - 1 || posOfLastDot == std::string::npos) {
         return false;
     }
@@ -133,8 +119,8 @@ bool MainWindow::isValidEmail(std::string str) {
     }
     return true;
 }
-*/
-/*bool MainWindow::isValidId(std::string input) {
+
+bool MainWindow::isValidId(std::string input) {
     bool answer = true;
     for (auto symbol : input) {
         if (symbol < '0' || symbol > '9') {
@@ -143,13 +129,9 @@ bool MainWindow::isValidEmail(std::string str) {
     }
     if (answer) {
         int id = stoll(input, nullptr, 10);
-        answer = false;
-        for (auto comp : testDataBase.companies) {
-            if (comp.findOrder(id) != nullptr) {
-                answer = true;
-            }
-        }
+        dataBase::Order order = dataBase::ClientAPI::getOrderById(id);
+        answer = (order.id == id);
     }
     return answer;
 }
-*/
+
