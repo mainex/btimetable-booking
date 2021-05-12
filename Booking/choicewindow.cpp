@@ -18,7 +18,7 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
         auto orders = db::ClientAPI::listVacantOrdersOfCompany(companies[i]);
         for (size_t k = 0; k < orders.size(); ++k) {
 
-           auto order = db::ClientAPI::getOrderById(orders[k]);
+            auto order = db::ClientAPI::getOrderById(orders[k]);
             auto master = db::ClientAPI::getEmployeeById(order.employeeId);
             std::string str = order.title + ", " + master.fullName + ", c " + std::to_string(order.timeStart) + " до " + std::to_string(order.duration + order.timeStart);
             ui->comboBox->addItem(QString(str.c_str()), QVariant(order.id));

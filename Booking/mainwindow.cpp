@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);    
+    ui->setupUi(this);
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         ui->emailLabel->setText(ui->enterEmailLineEdit->text());
         ui->telephoneLabel->setText(ui->enterTelephoneLineEdit->text());
@@ -99,4 +99,3 @@ bool MainWindow::isValidEmail(std::string str) {
 bool MainWindow::isValidName(std::string str) {
     return !str.empty();
 }
-

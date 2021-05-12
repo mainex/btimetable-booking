@@ -15,17 +15,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-        void enterId();
+    void enterId();
 
-        void enterTelephone();
+    void enterTelephone();
 
-        void enterEmail();
+    void enterEmail();
 
-        bool isValidName(std::string);
+    bool isValidName(std::string);
 
-        static bool isValidTelephone(std::string);
+    static bool isValidTelephone(std::string);
 
-        static bool isValidEmail(std::string);
+    static bool isValidEmail(std::string);
 
 private:
     Ui::MainWindow *ui;
