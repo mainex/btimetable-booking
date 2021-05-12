@@ -21,7 +21,7 @@ public:
 
         void enterEmail();
 
-        bool isValidId(std::string);
+        bool isValidName(std::string);
 
         static bool isValidTelephone(std::string);
 

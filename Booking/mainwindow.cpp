@@ -1,52 +1,19 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "QStandardItemModel"
 #include "QStandardItem"
-#include <QtSql/QSqlDatabase>
 #include <QMessageBox>
 #include "QDebug"
 #include "ClientAPI.h"
 #include <iostream>
+#include "choicewindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    QStandardItemModel *model = new QStandardItemModel;
-    QStandardItem *item;
-
-    QStringList horizontalHeader;
-    horizontalHeader.append("ID события");
-    horizontalHeader.append("Мастер");
-    horizontalHeader.append("Время начала");
-    horizontalHeader.append("Продолжительность");
-
-    model->setHorizontalHeaderLabels(horizontalHeader);
-    ui->tableView->setModel(model);
-    auto companies = dataBase::ClientAPI::listCompanies();
-    for (size_t i = 0; i < companies.size(); ++i) {
-        auto orders = dataBase::ClientAPI::listVacantOrdersOfCompany(companies[i]);
-        for (size_t k = 0; k < orders.size(); ++k) {
-            auto order = dataBase::ClientAPI::getOrderById(orders[k]);
-            item = new QStandardItem(QString(std::to_string(order.id).c_str()));
-            model->setItem(k, 0, item);
-            auto master = dataBase::ClientAPI::getEmployeeById(order.employeeId);
-            item = new QStandardItem(QString(master.fullName.c_str()));
-            model->setItem(k, 1, item);
-            item = new QStandardItem(QString(std::to_string(order.timeStart).c_str()));
-            model->setItem(k, 2, item);
-            item = new QStandardItem(QString(std::to_string(order.duration).c_str()));
-            model->setItem(k, 3, item);
-        }
-    }
-    ui->tableView->verticalHeader()->hide();
-    ui->tableView->resizeRowsToContents();
-    ui->tableView->resizeColumnsToContents();
-    ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+    ui->setupUi(this);    
     connect(ui->pushButton, &QPushButton::clicked, [this]{
-        ui->idLabel->setText(ui->enterIdLineEdit->text());
         ui->emailLabel->setText(ui->enterEmailLineEdit->text());
         ui->telephoneLabel->setText(ui->enterTelephoneLineEdit->text());
         if(isValidTelephone(ui->enterTelephoneLineEdit->text().toStdString())) {
@@ -59,17 +26,25 @@ MainWindow::MainWindow(QWidget *parent)
         } else {
             ui->isEmailOkLabel->setText("Bad");
         }
-        if(isValidId(ui->enterIdLineEdit->text().toStdString())) {
-            ui->isIdOkLabel->setText("Good");
+        if(isValidName(ui->enterNameLineEdit->text().toStdString())) {
+            ui->isNameOkLabel->setText("Good");
         } else {
-            ui->isIdOkLabel->setText("Bad");
+            ui->isNameOkLabel->setText("Bad");
         }
-        if (ui->isIdOkLabel->text().toStdString() == "Good" &&
-                ui->isEmailOkLabel->text().toStdString() == "Good" &&
+        if (ui->isEmailOkLabel->text().toStdString() == "Good" &&
                 ui->isTelephoneOkLabel->text().toStdString() == "Good") {
             ui->label->setText("Данные корректны!");
         } else {
             ui->label->setText("Проверьте данные, бронирование не завершено.");
+        }
+    });
+
+    connect(ui->pushButton_2, &QPushButton::clicked, [this] {
+        if (ui->label->text() == "Данные корректны!") {
+            auto client = db::ClientAPI::createClient(ui->nameLabel->text().toStdString(), ui->telephoneLabel->text().toStdString(), ui->emailLabel->text().toStdString());
+            ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
+            w->show();
+            hide();
         }
     });
 }
@@ -120,18 +95,7 @@ bool MainWindow::isValidEmail(std::string str) {
     return true;
 }
 
-bool MainWindow::isValidId(std::string input) {
-    bool answer = true;
-    for (auto symbol : input) {
-        if (symbol < '0' || symbol > '9') {
-            answer = false;
-        }
-    }
-    if (answer) {
-        int id = stoll(input, nullptr, 10);
-        dataBase::Order order = dataBase::ClientAPI::getOrderById(id);
-        answer = (order.id == id);
-    }
-    return answer;
+bool MainWindow::isValidName(std::string str) {
+    return !str.empty();
 }
 

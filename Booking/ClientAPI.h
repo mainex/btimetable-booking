@@ -3,7 +3,7 @@
 
 #include "entities.h"
 
-namespace dataBase {
+namespace db {
 class ClientAPI {
 public:
     static Client createClient(std::string fullName, std::string phoneNumber, std::string email);
