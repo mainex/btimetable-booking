@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         ui->emailLabel->setText(ui->enterEmailLineEdit->text());
         ui->telephoneLabel->setText(ui->enterTelephoneLineEdit->text());
+        ui->nameLabel->setText(ui->enterNameLineEdit->text());
         if(isValidTelephone(ui->enterTelephoneLineEdit->text().toStdString())) {
             ui->isTelephoneOkLabel->setText("Good");
         } else {

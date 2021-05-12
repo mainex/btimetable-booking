@@ -29,6 +29,7 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
         auto client = db::ClientAPI::getClientById(clientId);
         auto order = db::ClientAPI::getOrderById(ui->comboBox->itemData(ui->comboBox->currentIndex()).toInt());
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
+        db::ClientAPI::bookOrder(order.id, clientId);
         QMessageBox::information(this, QString("Бронирование прошло успешно!"), QString((client.fullName + ", Вы забронировали: "+ order.title + " (с " + std::to_string(order.timeStart) + " до " + std::to_string(order.duration + order.timeStart) + "), мастер " + master.fullName).c_str()));
         ui->comboBox->clear();
         auto companies = db::ClientAPI::listCompanies();
