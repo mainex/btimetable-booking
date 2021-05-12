@@ -1,7 +1,7 @@
 #ifndef BTIMETABLE_CLIENTAPI_H
 #define BTIMETABLE_CLIENTAPI_H
 
-#include "Entities.h"
+#include "entities.h"
 
 namespace dataBase {
 class ClientAPI {
