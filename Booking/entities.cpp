@@ -1,6 +1,6 @@
 #include "entities.h"
 
-namespace dataBase {
+namespace db {
 /*
     template<typename T>
     void Holder<T>::add(T value) {

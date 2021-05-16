@@ -1,9 +1,9 @@
 #ifndef BTIMETABLE_CLIENTAPI_H
 #define BTIMETABLE_CLIENTAPI_H
 
-#include "Entities.h"
+#include "entities.h"
 
-namespace dataBase {
+namespace db {
 class ClientAPI {
 public:
     static Client createClient(std::string fullName, std::string phoneNumber, std::string email);
