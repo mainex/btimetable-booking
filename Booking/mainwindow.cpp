@@ -43,9 +43,27 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_2, &QPushButton::clicked, [this] {
         if (ui->label->text() == "Данные корректны!") {
             auto client = db::ClientAPI::createClient(ui->nameLabel->text().toStdString(), ui->telephoneLabel->text().toStdString(), ui->emailLabel->text().toStdString());
+            QMessageBox::information(this, QString("Регистрация завершена"), QString(("Ваш id: " + std::to_string(client.id) + ". Запомните его для последующего входа в приложение.").c_str()));
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
             w->show();
             hide();
+        }
+    });
+
+    connect(ui->enterButton, &QPushButton::clicked, [this] {
+        std::string id = ui->idLineEdit->text().toUtf8().constData();
+        bool is_digit = true;
+        for (size_t i = 0; i < id.size() && is_digit; ++i) {
+            is_digit = isdigit(id[i]);
+        }
+        if (is_digit) {
+            auto client = db::ClientAPI::getClientById(stoll(id));
+            if (!client.fullName.empty()){
+                ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
+
+                w->show();
+                hide();
+            }
         }
     });
 }
