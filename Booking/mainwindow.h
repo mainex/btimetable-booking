@@ -14,18 +14,21 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    int id;
+    std::string email, name, password, telephone;
+    static void enterId();
 
-    void enterId();
+    static void enterTelephone();
 
-    void enterTelephone();
+    static void enterEmail();
 
-    void enterEmail();
-
-    bool isValidName(std::string);
+    static bool isValidName(std::string);
 
     static bool isValidTelephone(std::string);
 
     static bool isValidEmail(std::string);
+
+    static bool isValidPassword(std::string);
 
 private:
     Ui::MainWindow *ui;

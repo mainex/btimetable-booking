@@ -39,7 +39,6 @@ void ChoiceWindow::update() {
             auto order = db::ClientAPI::getOrderById(orders[k]);
             auto master = db::ClientAPI::getEmployeeById(order.employeeId);
             const time_t timeStart = order.timeStart;
-            const time_t timeFinish = order.duration+order.timeStart;
             std::string str = order.title + ", " + master.fullName + ", " + asctime(gmtime(&timeStart));
             str.pop_back();
             ui->comboBox->addItem(QString(str.c_str()), QVariant(order.id));
@@ -82,11 +81,6 @@ void ChoiceWindow::update() {
         timeFinishStr.pop_back();
         item = new QStandardItem(QString(timeFinishStr.c_str()));
         model->setItem(i, 4, item);
-
-        /*connect(ui->tableView->, &QPushButton::clicked, [this](){
-
-        });*/
-
     }
 
     ui->tableView->setModel(model);

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>746</width>
-    <height>408</height>
+    <height>508</height>
    </rect>
   </property>
   <property name="palette">
@@ -461,17 +461,31 @@
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Имя:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLineEdit" name="enterNameLineEdit"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="isNameOkLabel">
+            <property name="text">
+             <string>Bad</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item row="1" column="0">
          <widget class="QLabel" name="enterEmailLabel">
           <property name="text">
            <string>E-mail в формате example@domain.com:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="enterEmailLineEdit">
-          <property name="text">
-           <string/>
           </property>
          </widget>
         </item>
@@ -482,45 +496,17 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="enterTelephoneLineEdit">
+        <item row="3" column="0">
+         <widget class="QLabel" name="enterPasswordLabel">
           <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Имя:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="enterNameLineEdit"/>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Зарегистрироваться</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QFormLayout" name="formLayout_4">
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>E-mail:</string>
+           <string>Пароль:</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QLabel" name="emailLabel">
+           <widget class="QLineEdit" name="enterEmailLineEdit">
             <property name="text">
              <string/>
             </property>
@@ -535,17 +521,10 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Телефон:</string>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QLabel" name="telephoneLabel">
+           <widget class="QLineEdit" name="enterTelephoneLineEdit">
             <property name="text">
              <string/>
             </property>
@@ -560,24 +539,13 @@
           </item>
          </layout>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Имя:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout">
+        <item row="3" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
-           <widget class="QLabel" name="nameLabel">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
+           <widget class="QLineEdit" name="enterPasswordLineEdit"/>
           </item>
           <item>
-           <widget class="QLabel" name="isNameOkLabel">
+           <widget class="QLabel" name="isPasswordOkLabel">
             <property name="text">
              <string>Bad</string>
             </property>
@@ -586,6 +554,13 @@
          </layout>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Зарегистрироваться</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -614,6 +589,26 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="idLineEdit"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Пароль:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="lineEdit"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Введите номер телефона:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEdit_2"/>
       </item>
      </layout>
     </item>
