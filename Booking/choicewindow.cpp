@@ -96,7 +96,7 @@ void ChoiceWindow::update() {
 
     int hheight = ui->tableView->horizontalHeader()->height();
     int fheight = ui->tableView->frameWidth() * 2;
-    int rheight = ui->tableView->rowHeight(1) * bookedOrders.size();
+    int rheight = ui->tableView->rowHeight(0) * bookedOrders.size();
 
     ui->tableView->setFixedHeight(hheight + fheight + rheight);
 

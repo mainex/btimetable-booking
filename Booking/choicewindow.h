@@ -18,7 +18,7 @@ public:
     ~ChoiceWindow();
     unsigned long long clientId;
     void update();
-    void handleOnTableClicked(const QModelIndex &index);
+
 private:
     Ui::ChoiceWindow *ui;
 };

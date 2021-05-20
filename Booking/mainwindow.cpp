@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->enterPasswordLineEdit->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_2->setEchoMode(QLineEdit::Password);
+    ui->lineEdit->setEchoMode(QLineEdit::Password);
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         email = ui->enterEmailLineEdit->text().toUtf8().constData();
         telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
