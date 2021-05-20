@@ -6,6 +6,7 @@
 #include "QDebug"
 #include "ClientAPI.h"
 #include <iostream>
+#include <time.h>
 
 ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
     QMainWindow(parent),
@@ -37,7 +38,10 @@ void ChoiceWindow::update() {
         for (size_t k = 0; k < orders.size(); ++k) {
             auto order = db::ClientAPI::getOrderById(orders[k]);
             auto master = db::ClientAPI::getEmployeeById(order.employeeId);
-            std::string str = order.title + ", " + master.fullName + ", c " + std::to_string(order.timeStart) + " до " + std::to_string(order.duration + order.timeStart);
+            const time_t timeStart = order.timeStart;
+            const time_t timeFinish = order.duration+order.timeStart;
+            std::string str = order.title + ", " + master.fullName + ", " + asctime(gmtime(&timeStart));
+            str.pop_back();
             ui->comboBox->addItem(QString(str.c_str()), QVariant(order.id));
         }
     }
@@ -50,7 +54,7 @@ void ChoiceWindow::update() {
     horizontalHeader.append("Компания");
     horizontalHeader.append("Мастер");
     horizontalHeader.append("Начало");
-    horizontalHeader.append("Продолжительность");
+    horizontalHeader.append("Окончание");
 
     model->setHorizontalHeaderLabels(horizontalHeader);
 
@@ -58,6 +62,8 @@ void ChoiceWindow::update() {
         auto order = db::ClientAPI::getOrderById(bookedOrders[i]);
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
         auto company = db::ClientAPI::getCompanyById(order.companyId);
+        const time_t timeStart = order.timeStart;
+        const time_t timeFinish = order.duration+order.timeStart;
         item = new QStandardItem(QString(order.title.c_str()));
         model->setItem(i, 0, item);
 
@@ -67,10 +73,14 @@ void ChoiceWindow::update() {
         item = new QStandardItem(QString(master.fullName.c_str()));
         model->setItem(i, 2, item);
 
-        item = new QStandardItem(QString(std::to_string(order.timeStart).c_str()));
+        std::string timeStartStr = asctime(gmtime(&timeStart));
+        timeStartStr.pop_back();
+        item = new QStandardItem(QString(timeStartStr.c_str()));
         model->setItem(i, 3, item);
 
-        item = new QStandardItem(QString(std::to_string(order.duration).c_str()));
+        std::string timeFinishStr = asctime(gmtime(&timeFinish));
+        timeFinishStr.pop_back();
+        item = new QStandardItem(QString(timeFinishStr.c_str()));
         model->setItem(i, 4, item);
 
         /*connect(ui->tableView->, &QPushButton::clicked, [this](){
