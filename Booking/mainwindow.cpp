@@ -45,8 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
             auto client = db::ClientAPI::createClient(ui->nameLabel->text().toStdString(), ui->telephoneLabel->text().toStdString(), ui->emailLabel->text().toStdString());
             QMessageBox::information(this, QString("Регистрация завершена"), QString(("Ваш id: " + std::to_string(client.id) + ". Запомните его для последующего входа в приложение.").c_str()));
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
-            w->show();
             hide();
+            w->show();
         }
     });
 
@@ -60,9 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
             auto client = db::ClientAPI::getClientById(stoll(id));
             if (!client.fullName.empty()){
                 ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
-
-                w->show();
                 hide();
+                w->show();
             }
         }
     });
