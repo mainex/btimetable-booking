@@ -1,12 +1,18 @@
 #ifndef BTIMETABLE_CLIENTAPI_H
 #define BTIMETABLE_CLIENTAPI_H
 
-#include "entities.h"
+#include "Entities.h"
 
 namespace db {
 class ClientAPI {
 public:
-    static Client createClient(std::string fullName, std::string phoneNumber, std::string email);
+    static Client createClient(const std::string &phoneNumber,
+                               const std::string &password,
+                               const std::string &fullName,
+                               const std::string &email);
+
+    static long long authorizeClient(const std::string &phoneNumber,
+                                     const std::string &password);
 
     static std::vector<long long> listCompanies();
 
@@ -36,6 +42,6 @@ public:
 
     static std::vector<long long> listVacantOrdersOfEmployee(long long id);
 };
-}
+}  // namespace db
 
-#endif //BTIMETABLE_CLIENTAPI_H
+#endif  // BTIMETABLE_CLIENTAPI_H

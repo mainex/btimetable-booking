@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_2, &QPushButton::clicked, [this] {
         if (ui->label->text() == "Данные корректны!") {
-            auto client = db::ClientAPI::createClient(name, telephone, email);
+            auto client = db::ClientAPI::createClient(telephone, "123456789", name, email);
             QMessageBox::information(this, QString("Регистрация завершена"), QString(("Ваш id: " + std::to_string(client.id) + ". Запомните его для последующего входа в приложение.").c_str()));
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
             hide();

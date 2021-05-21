@@ -13,6 +13,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(PostgreSQL REQUIRED)
+    add_library(pqxx STATIC IMPORTED)
+    set_target_properties(pqxx PROPERTIES IMPORTED_LOCATION "C:/Booking/btimetable-booking/Booking/pqxx.lib")
+    set(PQXX_LIB pqxx)
+    set(PQ_LIB PostgreSQL::PostgreSQL)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -20,11 +25,7 @@ set(PROJECT_SOURCES
         choicewindow.cpp
 )
 add_library(btt STATIC IMPORTED)
-set_target_properties(btt PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/btt.lib)
-add_library(hiredis STATIC IMPORTED)
-set_target_properties(hiredis PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/hiredis_static.lib)
-add_library(redis++ STATIC IMPORTED)
-set_target_properties(redis++ PROPERTIES IMPORTED_LOCATION ../btimetable-booking/Booking/redis++_static.lib)
+set_target_properties(btt PROPERTIES IMPORTED_LOCATION "C:/Booking/btimetable-booking/Booking/btt.lib")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Booking
@@ -44,5 +45,4 @@ endif()
 
 target_link_libraries(Booking PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(Booking PRIVATE btt)
-target_link_libraries(Booking PRIVATE hiredis)
-target_link_libraries(Booking PRIVATE redis++)
+target_link_libraries(Booking PRIVATE ${PQXX_LIB} ${PQ_LIB} ws2_32.lib)
