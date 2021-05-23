@@ -14,33 +14,34 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->enterPasswordLineEdit->setEchoMode(QLineEdit::Password);
-    ui->lineEdit->setEchoMode(QLineEdit::Password);
+    ui->enterTelephoneForAuthorizationLineEdit->setEchoMode(QLineEdit::Password);
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         email = ui->enterEmailLineEdit->text().toUtf8().constData();
         telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
         name = ui->enterNameLineEdit->text().toUtf8().constData();
-        if(isValidTelephone(ui->enterTelephoneLineEdit->text().toStdString())) {
+        password = ui->enterPasswordLineEdit->text().toUtf8().constData();
+        if(isValidTelephone(telephone)) {
             ui->isTelephoneOkLabel->setText("Good");
         } else {
             ui->isTelephoneOkLabel->setText("Bad");
         }
-        if(isValidEmail(ui->enterEmailLineEdit->text().toStdString())) {
+        if(isValidEmail(email)) {
             ui->isEmailOkLabel->setText("Good");
         } else {
             ui->isEmailOkLabel->setText("Bad");
         }
-        if(isValidName(ui->enterNameLineEdit->text().toStdString())) {
+        if(isValidName(name)) {
             ui->isNameOkLabel->setText("Good");
         } else {
             ui->isNameOkLabel->setText("Bad");
         }
-        if(isValidPassword(ui->enterPasswordLineEdit->text().toStdString())) {
+        if(isValidPassword(password)) {
             ui->isPasswordOkLabel->setText("Good");
         } else {
             ui->isPasswordOkLabel->setText("Bad");
         }
         if (ui->isEmailOkLabel->text().toStdString() == "Good" &&
-                ui->isTelephoneOkLabel->text().toStdString() == "Good" && ui->isNameOkLabel->text().toStdString() == "Good") {
+                ui->isTelephoneOkLabel->text().toStdString() == "Good" && ui->isNameOkLabel->text().toStdString() == "Good" && ui->isPasswordOkLabel->text().toStdString() == "Good") {
             ui->label->setText("Данные корректны!");
         } else {
             ui->label->setText("Проверьте данные, регистрация не завершена.");
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_2, &QPushButton::clicked, [this] {
         if (ui->label->text() == "Данные корректны!") {
-            auto client = db::ClientAPI::createClient(telephone, "123456789", name, email);
+            auto client = db::ClientAPI::createClient(telephone, password, name, email);
             QMessageBox::information(this, QString("Регистрация завершена"), QString(("Ваш id: " + std::to_string(client.id) + ". Запомните его для последующего входа в приложение.").c_str()));
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
             hide();
@@ -58,19 +59,12 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(ui->enterButton, &QPushButton::clicked, [this] {
-        std::string id = ui->idLineEdit->text().toUtf8().constData();
-        bool is_digit = true;
-        for (size_t i = 0; i < id.size() && is_digit; ++i) {
-            is_digit = isdigit(id[i]);
-        }
-        if (is_digit && id.size()) {
-            auto client = db::ClientAPI::getClientById(stoll(id));
-            if (!client.fullName.empty()){
-                ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
-                hide();
-                w->show();
-            }
-        }
+        password = ui->enterPasswordForAuthorizationLineEdit->text().toUtf8().constData();
+        telephone = ui->enterTelephoneForAuthorizationLineEdit->text().toUtf8().constData();
+        long long id = db::ClientAPI::authorizeClient(telephone, password);
+        ChoiceWindow *w = new ChoiceWindow(id, nullptr);
+        hide();
+        w->show();
     });
 }
 MainWindow::~MainWindow()
