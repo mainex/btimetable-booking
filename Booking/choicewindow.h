@@ -22,9 +22,9 @@ public:
     unsigned long long clientId;
     void update();
     void showVacantOrders();
-    static void addOrderToTableView(QStandardItem*, QStandardItemModel*, size_t&, db::Order&, db::Company&, db::Employee&, const time_t&, const time_t&);
+    static void addOrderToTableView(QStandardItem*, QStandardItemModel*, size_t&, db::Order&, db::Company&, db::Employee&, const time_t&, const time_t&, bool);
     static void createTableView(QStandardItemModel*, QStringList&, QTableView*, const size_t&);
-
+    std::string to_string(db::Order&, db::Employee&, db::Company&);
 private:
     Ui::ChoiceWindow *ui;
 };

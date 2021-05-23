@@ -15,11 +15,11 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
 
     connect(ui->pushButton, &QPushButton::clicked, [this](){
         auto client = db::ClientAPI::getClientById(clientId);
-        auto order = db::ClientAPI::getOrderById(ui->comboBox->itemData(ui->comboBox->currentIndex()).toInt());
+        auto order = db::ClientAPI::getOrderById(ui->comboBox->itemData(ui->comboBox->currentIndex()).toLongLong());
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
         auto company = db::ClientAPI::getCompanyById(order.companyId);
         db::ClientAPI::bookOrder(order.id, clientId);
-        QMessageBox::information(this, QString("Booking completed!"), QString((client.fullName + ", you booked: "+ order.title + " in " + company.name + " (from " + std::to_string(order.timeStart) + " to " + std::to_string(order.duration + order.timeStart) + "), master " + master.fullName).c_str()));
+        QMessageBox::information(this, QString("Booking completed!"), QString((client.fullName + ", you booked: " + to_string(order, master, company)).c_str()));
         ui->comboBox->clear();
         update();
     });
@@ -40,7 +40,7 @@ void ChoiceWindow::showVacantOrders() {
     }
 }
 
-void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *model, size_t &i, db::Order &order, db::Company &company, db::Employee &master, const time_t& timeStart, const time_t& timeFinish){
+void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *model, size_t &i, db::Order &order, db::Company &company, db::Employee &master, const time_t& timeStart, const time_t& timeFinish, bool comments = false){
     item = new QStandardItem(QString(order.title.c_str()));
     model->setItem(i, 0, item);
 
@@ -61,6 +61,22 @@ void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *
     timeFinishStr.pop_back();
     item = new QStandardItem(QString(timeFinishStr.c_str()));
     model->setItem(i, 4, item);
+
+    if (comments){
+        item = new QStandardItem(QString("Leave a comment"));
+        model->setItem(i, 5, item);
+    } else {
+        item = new QStandardItem(QString("Cancel"));
+        model->setItem(i, 5, item);
+        item = new QStandardItem(QString(std::to_string(order.id).c_str()));
+        model->setItem(i, 6, item);
+    }
+
+    if (false){
+        for (int j = 0; j < 5 + comments; ++j){
+            model->setData(model->index(i, j), QColor(Qt::gray), Qt::BackgroundRole);
+        }
+    }
     ++i;
 }
 
@@ -70,6 +86,7 @@ void ChoiceWindow::createTableView(QStandardItemModel* model, QStringList& horiz
     tableView->resizeRowsToContents();
     tableView->resizeColumnsToContents();
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableView->horizontalHeader()->setSectionResizeMode (QHeaderView::Fixed);
 
     int vwidth = tableView->verticalHeader()->width();
     int hwidth = tableView->horizontalHeader()->length();
@@ -93,8 +110,6 @@ void ChoiceWindow::update() {
 
     QStringList horizontalHeader;
 
-    horizontalHeader.append(QList<QString>({"Event", "Company", "Master", "Start", "Finish"}));
-
     size_t rowF = 0, rowC = 0;
     for (size_t i = 0; i < bookedOrders.size(); ++i) {
         auto order = db::ClientAPI::getOrderById(bookedOrders[i]);
@@ -104,14 +119,41 @@ void ChoiceWindow::update() {
         if (timeFinish < time(NULL)){
             addOrderToTableView(item, modelFutureOrders, rowF, order, company, master, timeStart, timeFinish);
         } else {
-            addOrderToTableView(item, modelCompletedOrders, rowC, order, company, master, timeStart, timeFinish);
+            addOrderToTableView(item, modelCompletedOrders, rowC, order, company, master, timeStart, timeFinish, true);
         }
     }
-
+    horizontalHeader.append(QList<QString>({"Event", "Company", "Master", "Start", "Finish", "Status"}));
     createTableView(modelFutureOrders, horizontalHeader, ui->futureOrdersTableView, bookedOrders.size());
+    ui->futureOrdersTableView->setColumnHidden(6, true);
+    horizontalHeader.pop_back();
+    horizontalHeader.append("My comments");
     createTableView(modelCompletedOrders, horizontalHeader, ui->completedOrdersTableView, bookedOrders.size());
+
+    connect(ui->futureOrdersTableView, &QTableView::doubleClicked, [&](const QModelIndex& index){
+        if (index.column() == 5){
+            long long id = atoll(ui->futureOrdersTableView->model()->data(ui->futureOrdersTableView->model()->index(index.row(), 6)).toString().toUtf8().constData());
+            auto order = db::ClientAPI::getOrderById(id);
+            auto master = db::ClientAPI::getEmployeeById(order.employeeId);
+            auto company = db::ClientAPI::getCompanyById(order.companyId);
+            QMessageBox msgBox;
+            msgBox.setText("Are you sure?");
+            msgBox.setInformativeText(("Do you want to cancel this order: " + to_string(order, master, company)).c_str());
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            msgBox.setDefaultButton(QMessageBox::Yes);
+            int res = msgBox.exec();
+            if (res == QMessageBox::Yes) {
+                db::ClientAPI::cancelOrder(id);
+                update();
+            }
+            msgBox.show();
+        }
+    });
+
 }
 
+std::string ChoiceWindow::to_string(db::Order &order, db::Employee& master, db::Company& company) {
+    return order.title + " in " + company.name + " (from " + std::to_string(order.timeStart) + " to " + std::to_string(order.duration + order.timeStart) + "), master " + master.fullName;
+}
 ChoiceWindow::~ChoiceWindow()
 {
     delete ui;
