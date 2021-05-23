@@ -33,8 +33,14 @@ public:
     explicit Client(long long id_) : id(id_) {
     }
 
-    Client(long long id_, std::string fullName_, std::string phoneNumber_, std::string email_)
-        : id(id_), fullName(std::move(fullName_)), phoneNumber(std::move(phoneNumber_)), email(std::move(email_)) {
+    Client(long long id_,
+           std::string fullName_,
+           std::string phoneNumber_,
+           std::string email_)
+        : id(id_),
+          fullName(std::move(fullName_)),
+          phoneNumber(std::move(phoneNumber_)),
+          email(std::move(email_)) {
     }
 };
 
@@ -44,12 +50,26 @@ public:
     const long long id = 0;
     long long companyId = 0;
     std::string title;
-    long long timeStart = -1;
-    long long duration = -1;
+    long long timeStart;
+    long long duration;
     long long clientId = -1;
     long long employeeId = -1;
 
     explicit Order(long long id_) : id(id_) {
+    }
+
+    Order(long long id_,
+          long long companyId_,
+          std::string title_,
+          long long timeStart_,
+          long long duration_,
+          long long employeeId_)
+        : id(id_),
+          companyId(companyId_),
+          title(std::move(title_)),
+          timeStart(timeStart_),
+          duration(duration_),
+          employeeId(employeeId_) {
     }
 
     Order(long long id_,
@@ -67,20 +87,6 @@ public:
           clientId(clientId_),
           employeeId(employeeId_) {
     }
-
-    Order(long long id_,
-          long long companyId_,
-          std::string title_,
-          long long timeStart_,
-          long long duration_,
-          long long employeeId_)
-        : id(id_),
-          companyId(companyId_),
-          title(std::move(title_)),
-          timeStart(timeStart_),
-          duration(duration_),
-          employeeId(employeeId_) {
-    }
 };
 
 class Company {
@@ -92,7 +98,8 @@ public:
     explicit Company(long long id_) : id(id_) {
     }
 
-    explicit Company(long long id_, std::string name_) : id(id_), name(std::move(name_)) {
+    explicit Company(long long id_, std::string name_)
+        : id(id_), name(std::move(name_)) {
     }
 };
 

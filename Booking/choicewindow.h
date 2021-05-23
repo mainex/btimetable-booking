@@ -17,6 +17,7 @@ public:
     explicit ChoiceWindow(const int, QWidget *parent = nullptr);
     ~ChoiceWindow();
     unsigned long long clientId;
+    void update();
 
 private:
     Ui::ChoiceWindow *ui;

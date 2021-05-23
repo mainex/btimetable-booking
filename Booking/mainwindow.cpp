@@ -13,10 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->enterPasswordLineEdit->setEchoMode(QLineEdit::Password);
+    ui->lineEdit->setEchoMode(QLineEdit::Password);
     connect(ui->pushButton, &QPushButton::clicked, [this]{
-        ui->emailLabel->setText(ui->enterEmailLineEdit->text());
-        ui->telephoneLabel->setText(ui->enterTelephoneLineEdit->text());
-        ui->nameLabel->setText(ui->enterNameLineEdit->text());
+        email = ui->enterEmailLineEdit->text().toUtf8().constData();
+        telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
+        name = ui->enterNameLineEdit->text().toUtf8().constData();
         if(isValidTelephone(ui->enterTelephoneLineEdit->text().toStdString())) {
             ui->isTelephoneOkLabel->setText("Good");
         } else {
@@ -32,20 +34,42 @@ MainWindow::MainWindow(QWidget *parent)
         } else {
             ui->isNameOkLabel->setText("Bad");
         }
+        if(isValidPassword(ui->enterPasswordLineEdit->text().toStdString())) {
+            ui->isPasswordOkLabel->setText("Good");
+        } else {
+            ui->isPasswordOkLabel->setText("Bad");
+        }
         if (ui->isEmailOkLabel->text().toStdString() == "Good" &&
-                ui->isTelephoneOkLabel->text().toStdString() == "Good") {
+                ui->isTelephoneOkLabel->text().toStdString() == "Good" && ui->isNameOkLabel->text().toStdString() == "Good") {
             ui->label->setText("Данные корректны!");
         } else {
-            ui->label->setText("Проверьте данные, бронирование не завершено.");
+            ui->label->setText("Проверьте данные, регистрация не завершена.");
         }
     });
 
     connect(ui->pushButton_2, &QPushButton::clicked, [this] {
         if (ui->label->text() == "Данные корректны!") {
-            auto client = db::ClientAPI::createClient(ui->nameLabel->text().toStdString(), ui->telephoneLabel->text().toStdString(), ui->emailLabel->text().toStdString());
+            auto client = db::ClientAPI::createClient(telephone, "123456789", name, email);
+            QMessageBox::information(this, QString("Регистрация завершена"), QString(("Ваш id: " + std::to_string(client.id) + ". Запомните его для последующего входа в приложение.").c_str()));
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
-            w->show();
             hide();
+            w->show();
+        }
+    });
+
+    connect(ui->enterButton, &QPushButton::clicked, [this] {
+        std::string id = ui->idLineEdit->text().toUtf8().constData();
+        bool is_digit = true;
+        for (size_t i = 0; i < id.size() && is_digit; ++i) {
+            is_digit = isdigit(id[i]);
+        }
+        if (is_digit && id.size()) {
+            auto client = db::ClientAPI::getClientById(stoll(id));
+            if (!client.fullName.empty()){
+                ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
+                hide();
+                w->show();
+            }
         }
     });
 }
@@ -97,5 +121,9 @@ bool MainWindow::isValidEmail(std::string str) {
 }
 
 bool MainWindow::isValidName(std::string str) {
+    return !str.empty();
+}
+
+bool MainWindow::isValidPassword(std::string str) {
     return !str.empty();
 }
