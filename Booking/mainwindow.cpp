@@ -42,16 +42,15 @@ MainWindow::MainWindow(QWidget *parent)
         }
         if (ui->isEmailOkLabel->text().toStdString() == "Good" &&
                 ui->isTelephoneOkLabel->text().toStdString() == "Good" && ui->isNameOkLabel->text().toStdString() == "Good" && ui->isPasswordOkLabel->text().toStdString() == "Good") {
-            ui->label->setText("Данные корректны!");
+            ui->label->setText("All is ok!");
         } else {
-            ui->label->setText("Проверьте данные, регистрация не завершена.");
+            ui->label->setText("Check information, please, registration is not completed.");
         }
     });
 
     connect(ui->pushButton_2, &QPushButton::clicked, [this] {
-        if (ui->label->text() == "Данные корректны!") {
+        if (ui->label->text() == "All is ok!") {
             auto client = db::ClientAPI::createClient(telephone, password, name, email);
-            QMessageBox::information(this, QString("Регистрация завершена"), QString(("Ваш id: " + std::to_string(client.id) + ". Запомните его для последующего входа в приложение.").c_str()));
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
             hide();
             w->show();

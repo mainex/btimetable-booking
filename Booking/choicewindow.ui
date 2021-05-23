@@ -46,7 +46,7 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Выберите событие, на которое хотите записаться.</string>
+       <string>Select event.</string>
       </property>
      </widget>
     </item>
@@ -56,25 +56,18 @@
     <item>
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>Подтвердить</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Мои события:</string>
+       <string>Book</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Future orders</string>
        </attribute>
        <widget class="QTableView" name="tableView">
         <property name="geometry">
@@ -89,7 +82,7 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Completed orders</string>
        </attribute>
       </widget>
      </widget>

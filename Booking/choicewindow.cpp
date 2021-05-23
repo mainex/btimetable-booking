@@ -16,7 +16,7 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
     ui->setupUi(this);
     auto client = db::ClientAPI::getClientById(clientId);
     ui->label_4->setText(QString(client.fullName.c_str()));
-    ui->label_2->setText(QString(("id: "+ std::to_string(client.id) + "\n" + client.phoneNumber+ "\n" +client.email).c_str()));
+    ui->label_2->setText(QString((client.phoneNumber+ "\n" +client.email).c_str()));
     update();
 
     connect(ui->pushButton, &QPushButton::clicked, [this](){
@@ -25,7 +25,7 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
         auto company = db::ClientAPI::getCompanyById(order.companyId);
         db::ClientAPI::bookOrder(order.id, clientId);
-        QMessageBox::information(this, QString("Бронирование прошло успешно!"), QString((client.fullName + ", Вы забронировали: "+ order.title + " от компании " + company.name + " (с " + std::to_string(order.timeStart) + " до " + std::to_string(order.duration + order.timeStart) + "), мастер " + master.fullName).c_str()));
+        QMessageBox::information(this, QString("Booking completed!"), QString((client.fullName + ", you booked: "+ order.title + " in " + company.name + " (from " + std::to_string(order.timeStart) + " to " + std::to_string(order.duration + order.timeStart) + "), master " + master.fullName).c_str()));
         ui->comboBox->clear();
         update();
     });
@@ -49,11 +49,12 @@ void ChoiceWindow::update() {
     QStandardItem *item;
 
     QStringList horizontalHeader;
-    horizontalHeader.append("Событие");
-    horizontalHeader.append("Компания");
-    horizontalHeader.append("Мастер");
-    horizontalHeader.append("Начало");
-    horizontalHeader.append("Окончание");
+    horizontalHeader.append("Event");
+    horizontalHeader.append("Company");
+    horizontalHeader.append("Master");
+    horizontalHeader.append("Start");
+    horizontalHeader.append("Finish");
+
 
     model->setHorizontalHeaderLabels(horizontalHeader);
 
@@ -67,9 +68,11 @@ void ChoiceWindow::update() {
         model->setItem(i, 0, item);
 
         item = new QStandardItem(QString(company.name.c_str()));
+        item->setToolTip(QString(company.name.c_str()));
         model->setItem(i, 1, item);
 
         item = new QStandardItem(QString(master.fullName.c_str()));
+        item->setToolTip(QString(master.fullName.c_str()));
         model->setItem(i, 2, item);
 
         std::string timeStartStr = asctime(gmtime(&timeStart));
