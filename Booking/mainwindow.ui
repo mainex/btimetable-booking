@@ -464,7 +464,7 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Имя:</string>
+           <string>Name:</string>
           </property>
          </widget>
         </item>
@@ -485,21 +485,21 @@
         <item row="1" column="0">
          <widget class="QLabel" name="enterEmailLabel">
           <property name="text">
-           <string>E-mail в формате example@domain.com:</string>
+           <string>E-mail (example@domain.com):</string>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="enterTelephoneLabel">
           <property name="text">
-           <string>Телефон в формате +7-XXX-XXX-XX-XX:</string>
+           <string>Telephone Number (+7-XXX-XXX-XX-XX):</string>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="enterPasswordLabel">
           <property name="text">
-           <string>Пароль:</string>
+           <string>Paasword:</string>
           </property>
          </widget>
         </item>
@@ -558,7 +558,7 @@
       <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>Зарегистрироваться</string>
+         <string>Sign up</string>
         </property>
        </widget>
       </item>
@@ -567,14 +567,14 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Проверьте данные, регистрация не завершена</string>
+       <string>Check information, please, registration is not completed.</string>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="pushButton_2">
       <property name="text">
-       <string>Подтвердить</string>
+       <string>Accept</string>
       </property>
      </widget>
     </item>
@@ -583,7 +583,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Уже зарегистрированы? Введите номер телефона:</string>
+         <string>Doy you already have an account? Enter your telephone number:</string>
         </property>
        </widget>
       </item>
@@ -593,7 +593,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>Пароль:</string>
+         <string>Password:</string>
         </property>
        </widget>
       </item>
@@ -605,7 +605,7 @@
     <item>
      <widget class="QPushButton" name="enterButton">
       <property name="text">
-       <string>Войти</string>
+       <string>Sign in</string>
       </property>
      </widget>
     </item>
