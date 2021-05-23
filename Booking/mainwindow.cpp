@@ -1,11 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QStandardItemModel"
-#include "QStandardItem"
-#include <QMessageBox>
-#include "QDebug"
-#include "ClientAPI.h"
-#include <iostream>
 #include "choicewindow.h"
 
 MainWindow::MainWindow(QWidget *parent)

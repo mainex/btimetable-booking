@@ -1,12 +1,6 @@
 #include "choicewindow.h"
 #include "ui_choicewindow.h"
-#include "QStandardItemModel"
-#include "QStandardItem"
 #include <QMessageBox>
-#include "QDebug"
-#include "ClientAPI.h"
-#include <iostream>
-#include <time.h>
 
 ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
     QMainWindow(parent),
