@@ -489,20 +489,6 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="enterTelephoneLabel">
-          <property name="text">
-           <string>Telephone Number (+7-XXX-XXX-XX-XX):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="enterPasswordLabel">
-          <property name="text">
-           <string>Paasword:</string>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
@@ -520,6 +506,13 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="enterTelephoneLabel">
+          <property name="text">
+           <string>Telephone Number (+7-XXX-XXX-XX-XX):</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -539,6 +532,13 @@
           </item>
          </layout>
         </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="enterPasswordLabel">
+          <property name="text">
+           <string>Password:</string>
+          </property>
+         </widget>
+        </item>
         <item row="3" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
@@ -546,6 +546,27 @@
           </item>
           <item>
            <widget class="QLabel" name="isPasswordOkLabel">
+            <property name="text">
+             <string>Bad</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="enterPasswordAgainLabel">
+          <property name="text">
+           <string>Password again:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLineEdit" name="enterPasswordAgainLineEdit"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="isPasswordAgainOkLabel">
             <property name="text">
              <string>Bad</string>
             </property>
@@ -598,7 +619,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="enterPasswordForAuthorizationLineEdit_2"/>
+       <widget class="QLineEdit" name="enterPasswordForAuthorizationLineEdit"/>
       </item>
      </layout>
     </item>
