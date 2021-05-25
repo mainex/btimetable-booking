@@ -20,8 +20,26 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
         auto company = db::ClientAPI::getCompanyById(order.companyId);
         db::ClientAPI::bookOrder(order.id, clientId);
         QMessageBox::information(this, QString("Booking completed!"), QString((client.fullName + ", you booked: " + to_string(order, master, company)).c_str()));
-        ui->comboBox->clear();
         update();
+    });
+
+    connect(ui->futureOrdersTableView, &QTableView::doubleClicked, [&](const QModelIndex& index){
+        if (index.column() == 5){
+            long long id = atoll(ui->futureOrdersTableView->model()->data(ui->futureOrdersTableView->model()->index(index.row(), 6)).toString().toUtf8().constData());
+            auto order = db::ClientAPI::getOrderById(id);
+            auto master = db::ClientAPI::getEmployeeById(order.employeeId);
+            auto company = db::ClientAPI::getCompanyById(order.companyId);
+            QMessageBox msgBox;
+            msgBox.setText("Are you sure?");
+            msgBox.setInformativeText(("Do you want to cancel this order: " + to_string(order, master, company)).c_str());
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            msgBox.setDefaultButton(QMessageBox::Yes);
+            int res = msgBox.exec();
+            if (res == QMessageBox::Yes) {
+                db::ClientAPI::cancelOrder(id);
+                update();
+            }
+        }
     });
 }
 
@@ -102,6 +120,7 @@ void ChoiceWindow::createTableView(QStandardItemModel* model, QStringList& horiz
 }
 
 void ChoiceWindow::update() {
+    ui->comboBox->clear();
     showVacantOrders();
 
     auto bookedOrders = db::ClientAPI::listOrdersOfClient(clientId);
@@ -128,32 +147,16 @@ void ChoiceWindow::update() {
     horizontalHeader.pop_back();
     horizontalHeader.append("My comments");
     createTableView(modelCompletedOrders, horizontalHeader, ui->completedOrdersTableView, bookedOrders.size());
-
-    connect(ui->futureOrdersTableView, &QTableView::doubleClicked, [&](const QModelIndex& index){
-        if (index.column() == 5){
-            long long id = atoll(ui->futureOrdersTableView->model()->data(ui->futureOrdersTableView->model()->index(index.row(), 6)).toString().toUtf8().constData());
-            auto order = db::ClientAPI::getOrderById(id);
-            auto master = db::ClientAPI::getEmployeeById(order.employeeId);
-            auto company = db::ClientAPI::getCompanyById(order.companyId);
-            QMessageBox msgBox;
-            msgBox.setText("Are you sure?");
-            msgBox.setInformativeText(("Do you want to cancel this order: " + to_string(order, master, company)).c_str());
-            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-            msgBox.setDefaultButton(QMessageBox::Yes);
-            int res = msgBox.exec();
-            if (res == QMessageBox::Yes) {
-                db::ClientAPI::cancelOrder(id);
-                update();
-            }
-            msgBox.show();
-        }
-    });
-
 }
 
 std::string ChoiceWindow::to_string(db::Order &order, db::Employee& master, db::Company& company) {
-    return order.title + " in " + company.name + " (from " + std::to_string(order.timeStart) + " to " + std::to_string(order.duration + order.timeStart) + "), master " + master.fullName;
+    const time_t timeStart = order.timeStart, timeFinish = order.timeStart + order.duration;
+    std::string timeS = asctime(gmtime(&timeStart)), timeF = asctime(gmtime(&timeFinish));
+    timeS.pop_back();
+    timeF.pop_back();
+    return order.title + " in " + company.name + " (from " + timeS + " to " + timeF + "), master " + master.fullName;
 }
+
 ChoiceWindow::~ChoiceWindow()
 {
     delete ui;
