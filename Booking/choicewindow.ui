@@ -66,7 +66,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -124,31 +124,21 @@
        <attribute name="title">
         <string>Future orders</string>
        </attribute>
-       <widget class="QTableView" name="futureOrdersTableView">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>80</y>
-          <width>782</width>
-          <height>197</height>
-         </rect>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QTableView" name="futureOrdersTableView"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="completedOrdersTab">
        <attribute name="title">
         <string>Completed orders</string>
        </attribute>
-       <widget class="QTableView" name="completedOrdersTableView">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>80</y>
-          <width>256</width>
-          <height>192</height>
-         </rect>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QTableView" name="completedOrdersTableView"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

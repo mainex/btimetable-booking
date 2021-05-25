@@ -69,6 +69,7 @@ void ChoiceWindow::showCompanies() {
 
 void ChoiceWindow::showMasters() {
     auto companies = db::ClientAPI::listCompanies();
+    ui->masterComboBox->addItem(QString("All"), QVariant(-1));
     for (size_t i = 0; i < companies.size(); ++i) {
         auto masters = db::ClientAPI::listEmployeesOfCompany(companies[i]);
         for (size_t k = 0; k < masters.size(); ++k) {
@@ -79,7 +80,7 @@ void ChoiceWindow::showMasters() {
     }
 }
 
-void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *model, size_t &i, db::Order &order, db::Company &company, db::Employee &master, const time_t& timeStart, const time_t& timeFinish, bool comments = false){
+void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *model, int &i, db::Order &order, db::Company &company, db::Employee &master, const time_t& timeStart, const time_t& timeFinish, bool comments = false){
     item = new QStandardItem(QString(order.title.c_str()));
     model->setItem(i, 0, item);
 
@@ -119,7 +120,7 @@ void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *
     ++i;
 }
 
-void ChoiceWindow::createTableView(QStandardItemModel* model, QStringList& horizontalHeader, QTableView* tableView, const size_t& size) {
+void ChoiceWindow::createTableView(QStandardItemModel* model, QStringList& horizontalHeader, QTableView* tableView, const int& size) {
     model->setHorizontalHeaderLabels(horizontalHeader);
     tableView->setModel(model);
     tableView->resizeRowsToContents();
@@ -140,6 +141,10 @@ void ChoiceWindow::createTableView(QStandardItemModel* model, QStringList& horiz
     tableView->setFixedHeight(hheight + fheight + rheight);
 }
 
+void ChoiceWindow::globalUpdate() {
+    update();
+}
+
 void ChoiceWindow::update() {
     ui->orderComboBox->clear();
     showVacantOrders();
@@ -156,7 +161,7 @@ void ChoiceWindow::update() {
 
     QStringList horizontalHeader;
 
-    size_t rowF = 0, rowC = 0;
+    int rowF = 0, rowC = 0;
     for (size_t i = 0; i < bookedOrders.size(); ++i) {
         auto order = db::ClientAPI::getOrderById(bookedOrders[i]);
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);

@@ -21,11 +21,12 @@ public:
     ~ChoiceWindow();
     unsigned long long clientId;
     void update();
+    void globalUpdate();
     void showVacantOrders();
     void showMasters();
     void showCompanies();
-    static void addOrderToTableView(QStandardItem*, QStandardItemModel*, size_t&, db::Order&, db::Company&, db::Employee&, const time_t&, const time_t&, bool);
-    static void createTableView(QStandardItemModel*, QStringList&, QTableView*, const size_t&);
+    static void addOrderToTableView(QStandardItem*, QStandardItemModel*, int&, db::Order&, db::Company&, db::Employee&, const time_t&, const time_t&, bool);
+    static void createTableView(QStandardItemModel*, QStringList&, QTableView*, const int&);
     std::string to_string(db::Order&, db::Employee&, db::Company&);
 private:
     Ui::ChoiceWindow *ui;
