@@ -71,7 +71,7 @@ void ChoiceWindow::showMasters() {
     auto companies = db::ClientAPI::listCompanies();
     for (size_t i = 0; i < companies.size(); ++i) {
         auto masters = db::ClientAPI::listEmployeesOfCompany(companies[i]);
-        for (size_t k = 0; k < companies.size(); ++k) {
+        for (size_t k = 0; k < masters.size(); ++k) {
             auto master = db::ClientAPI::getEmployeeById(masters[k]);
             std::string str = master.fullName;
             ui->masterComboBox->addItem(QString(str.c_str()), QVariant(master.id));

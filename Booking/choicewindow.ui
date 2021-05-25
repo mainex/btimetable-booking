@@ -70,61 +70,55 @@
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Страница</string>
+        <string>New order</string>
        </attribute>
-       <widget class="QWidget" name="verticalLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>30</y>
-          <width>154</width>
-          <height>134</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <layout class="QFormLayout" name="formLayout_10">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Company</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="companyComboBox"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>Master</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="masterComboBox"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QPushButton" name="applyFiltersButton">
-           <property name="text">
-            <string>Apply filters</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="orderComboBox"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="bookButton">
-           <property name="text">
-            <string>Book</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_16">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QFormLayout" name="formLayout_10">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Company</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="companyComboBox"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Master</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="masterComboBox"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="applyFiltersButton">
+            <property name="text">
+             <string>Apply filters</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="orderComboBox"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="bookButton">
+            <property name="text">
+             <string>Book</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="futureOrdersTab">
        <attribute name="title">
