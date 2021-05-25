@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
         if (ui->label->text() == "All is ok!") {
             auto client = db::ClientAPI::createClient(telephone, password, name, email);
             ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
-            hide();
+            close();
             w->show();
         }
     });
@@ -70,8 +70,12 @@ MainWindow::MainWindow(QWidget *parent)
         telephone = ui->enterTelephoneForAuthorizationLineEdit->text().toUtf8().constData();
         long long id = db::ClientAPI::authorizeClient(telephone, password);
         ChoiceWindow *w = new ChoiceWindow(id, nullptr);
-        hide();
+        close();
         w->show();
+    });
+
+    connect(ui->actionExit, &QAction::triggered, [this](){
+        close();
     });
 }
 MainWindow::~MainWindow()
