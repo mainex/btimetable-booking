@@ -8,14 +8,22 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->enterPasswordLineEdit->setEchoMode(QLineEdit::Password);
-    ui->enterPasswordForAuthorizationLineEdit_2->setEchoMode(QLineEdit::Password);
+    ui->enterPasswordAgainLineEdit->setEchoMode(QLineEdit::Password);
+    ui->enterPasswordForAuthorizationLineEdit->setEchoMode(QLineEdit::Password);
+    ui->isEmailOkLabel->setFixedWidth(60);
+    ui->isNameOkLabel->setFixedWidth(60);
+    ui->isPasswordOkLabel->setFixedWidth(60);
+    ui->isTelephoneOkLabel->setFixedWidth(60);
+    ui->isPasswordAgainOkLabel->setFixedWidth(60);
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         email = ui->enterEmailLineEdit->text().toUtf8().constData();
         telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
         name = ui->enterNameLineEdit->text().toUtf8().constData();
         std::hash<std::string> h;
         const size_t hashedPassword = h(ui->enterPasswordLineEdit->text().toUtf8().constData());
+        const size_t hashedPasswordAgain = h(ui->enterPasswordAgainLineEdit->text().toUtf8().constData());
         password = std::to_string(hashedPassword);
+        passwordAgain = std::to_string(hashedPasswordAgain);
         if(isValidTelephone(telephone)) {
             ui->isTelephoneOkLabel->setText("Good");
         } else {
@@ -31,10 +39,12 @@ MainWindow::MainWindow(QWidget *parent)
         } else {
             ui->isNameOkLabel->setText("Bad");
         }
-        if(isValidPassword(password)) {
+        if(isValidPassword(password, passwordAgain)) {
             ui->isPasswordOkLabel->setText("Good");
+            ui->isPasswordAgainOkLabel->setText("Good");
         } else {
             ui->isPasswordOkLabel->setText("Bad");
+            ui->isPasswordAgainOkLabel->setText("Bad");
         }
         if (ui->isEmailOkLabel->text().toStdString() == "Good" &&
                 ui->isTelephoneOkLabel->text().toStdString() == "Good" && ui->isNameOkLabel->text().toStdString() == "Good" && ui->isPasswordOkLabel->text().toStdString() == "Good") {
@@ -55,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->enterButton, &QPushButton::clicked, [this] {
         std::hash<std::string> h;
-        const size_t hashedPassword = h(ui->enterPasswordForAuthorizationLineEdit_2->text().toUtf8().constData());
+        const size_t hashedPassword = h(ui->enterPasswordForAuthorizationLineEdit->text().toUtf8().constData());
         password = std::to_string(hashedPassword);
         telephone = ui->enterTelephoneForAuthorizationLineEdit->text().toUtf8().constData();
         long long id = db::ClientAPI::authorizeClient(telephone, password);
@@ -115,6 +125,6 @@ bool MainWindow::isValidName(std::string str) {
     return !str.empty();
 }
 
-bool MainWindow::isValidPassword(std::string str) {
-    return !str.empty();
+bool MainWindow::isValidPassword(std::string str1, std::string str2) {
+    return !str1.empty() && str1 == str2;
 }

@@ -15,7 +15,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     int id;
-    std::string email, name, password, telephone;
+    std::string email, name, password, passwordAgain, telephone;
     static void enterId();
 
     static void enterTelephone();
@@ -28,7 +28,7 @@ public:
 
     static bool isValidEmail(std::string);
 
-    static bool isValidPassword(std::string);
+    static bool isValidPassword(std::string, std::string);
 
 private:
     Ui::MainWindow *ui;
