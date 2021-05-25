@@ -13,9 +13,9 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
     ui->label_2->setText(QString((client.phoneNumber+ "\n" +client.email).c_str()));
     update();
 
-    connect(ui->pushButton, &QPushButton::clicked, [this](){
+    connect(ui->bookButton, &QPushButton::clicked, [this](){
         auto client = db::ClientAPI::getClientById(clientId);
-        auto order = db::ClientAPI::getOrderById(ui->comboBox->itemData(ui->comboBox->currentIndex()).toLongLong());
+        auto order = db::ClientAPI::getOrderById(ui->orderComboBox->itemData(ui->orderComboBox->currentIndex()).toLongLong());
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
         auto company = db::ClientAPI::getCompanyById(order.companyId);
         db::ClientAPI::bookOrder(order.id, clientId);
@@ -46,14 +46,35 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
 void ChoiceWindow::showVacantOrders() {
     auto companies = db::ClientAPI::listCompanies();
     for (size_t i = 0; i < companies.size(); ++i) {
-        auto orders = db::ClientAPI::listVacantOrdersOfCompany(companies[i]);
+        auto company = db::ClientAPI::getCompanyById(companies[i]);
+        auto orders = db::ClientAPI::listVacantOrdersOfCompany(company.id);
         for (size_t k = 0; k < orders.size(); ++k) {
             auto order = db::ClientAPI::getOrderById(orders[k]);
             auto master = db::ClientAPI::getEmployeeById(order.employeeId);
-            const time_t timeStart = order.timeStart;
-            std::string str = order.title + ", " + master.fullName + ", " + asctime(gmtime(&timeStart));
-            str.pop_back();
-            ui->comboBox->addItem(QString(str.c_str()), QVariant(order.id));
+            std::string str = to_string(order, master, company);
+            ui->orderComboBox->addItem(QString(str.c_str()), QVariant(order.id));
+        }
+    }
+}
+
+void ChoiceWindow::showCompanies() {
+    auto companies = db::ClientAPI::listCompanies();
+    ui->companyComboBox->addItem(QString("All"), QVariant(-1));
+    for (size_t i = 0; i < companies.size(); ++i) {
+        auto company = db::ClientAPI::getCompanyById(companies[i]);
+        std::string str = company.name;
+        ui->companyComboBox->addItem(QString(str.c_str()), QVariant(company.id));
+    }
+}
+
+void ChoiceWindow::showMasters() {
+    auto companies = db::ClientAPI::listCompanies();
+    for (size_t i = 0; i < companies.size(); ++i) {
+        auto masters = db::ClientAPI::listEmployeesOfCompany(companies[i]);
+        for (size_t k = 0; k < companies.size(); ++k) {
+            auto master = db::ClientAPI::getEmployeeById(masters[k]);
+            std::string str = master.fullName;
+            ui->masterComboBox->addItem(QString(str.c_str()), QVariant(master.id));
         }
     }
 }
@@ -120,8 +141,14 @@ void ChoiceWindow::createTableView(QStandardItemModel* model, QStringList& horiz
 }
 
 void ChoiceWindow::update() {
-    ui->comboBox->clear();
+    ui->orderComboBox->clear();
     showVacantOrders();
+
+    ui->masterComboBox->clear();
+    showMasters();
+
+    ui->companyComboBox->clear();
+    showCompanies();
 
     auto bookedOrders = db::ClientAPI::listOrdersOfClient(clientId);
     QStandardItemModel *modelFutureOrders = new QStandardItemModel, *modelCompletedOrders = new QStandardItemModel;
