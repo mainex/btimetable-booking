@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->isPasswordOkLabel->setFixedWidth(60);
     ui->isTelephoneOkLabel->setFixedWidth(60);
     ui->isPasswordAgainOkLabel->setFixedWidth(60);
+    const QRegularExpression telephoneRegExpr("\\+7(-\\d{3}){2}(-\\d{2}){2}");
+    ui->enterTelephoneLineEdit->setValidator(new QRegularExpressionValidator(telephoneRegExpr));
+    ui->enterTelephoneForAuthorizationLineEdit->setValidator(new QRegularExpressionValidator(telephoneRegExpr));
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         email = ui->enterEmailLineEdit->text().toUtf8().constData();
         telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
@@ -22,44 +25,40 @@ MainWindow::MainWindow(QWidget *parent)
         std::hash<std::string> h;
         const size_t hashedPassword = h(ui->enterPasswordLineEdit->text().toUtf8().constData());
         const size_t hashedPasswordAgain = h(ui->enterPasswordAgainLineEdit->text().toUtf8().constData());
-        password = std::to_string(hashedPassword);
-        passwordAgain = std::to_string(hashedPasswordAgain);
-        if(isValidTelephone(telephone)) {
+        const size_t hashedNull = h("");
+        if(telephone.size()) {
             ui->isTelephoneOkLabel->setText("Good");
         } else {
             ui->isTelephoneOkLabel->setText("Bad");
         }
-        if(isValidEmail(email)) {
+        if(email.size()) {
             ui->isEmailOkLabel->setText("Good");
         } else {
             ui->isEmailOkLabel->setText("Bad");
         }
-        if(isValidName(name)) {
+        if(name.size()) {
             ui->isNameOkLabel->setText("Good");
         } else {
             ui->isNameOkLabel->setText("Bad");
         }
-        if(isValidPassword(password, passwordAgain)) {
+        if(hashedNull != hashedPassword && hashedPassword == hashedPasswordAgain) {
             ui->isPasswordOkLabel->setText("Good");
             ui->isPasswordAgainOkLabel->setText("Good");
+            password = std::to_string(hashedPassword);
         } else {
             ui->isPasswordOkLabel->setText("Bad");
             ui->isPasswordAgainOkLabel->setText("Bad");
         }
         if (ui->isEmailOkLabel->text().toStdString() == "Good" &&
                 ui->isTelephoneOkLabel->text().toStdString() == "Good" && ui->isNameOkLabel->text().toStdString() == "Good" && ui->isPasswordOkLabel->text().toStdString() == "Good") {
-            ui->label->setText("All is ok!");
+            if (ui->label->text() == "All is ok!") {
+                auto client = db::ClientAPI::createClient(telephone, password, name, email);
+                ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
+                close();
+                w->show();
+            }
         } else {
-            ui->label->setText("Check information, please, registration is not completed.");
-        }
-    });
-
-    connect(ui->pushButton_2, &QPushButton::clicked, [this] {
-        if (ui->label->text() == "All is ok!") {
-            auto client = db::ClientAPI::createClient(telephone, password, name, email);
-            ChoiceWindow *w = new ChoiceWindow(client.id, nullptr);
-            close();
-            w->show();
+            ui->label->setText("Check information, please, registration did not complete.");
         }
     });
 
@@ -81,54 +80,4 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-bool MainWindow::isValidTelephone(std::string str) {
-    if (str.size() != 16) {
-        return false;
-    }
-
-    if (str[0] != '+' || str[1] != '7') {
-        return false;
-    }
-    int posOfNums[] = {3, 4, 5, 7, 8, 9, 11, 12, 14, 15};
-    for (int ind : posOfNums) {
-        if (!isdigit(str[ind])) {
-            return false;
-        }
-    }
-
-    int posOfDashes[] = {2, 6, 10, 13};
-    for (int ind : posOfDashes) {
-        if (str[ind] != '-') {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool MainWindow::isValidEmail(std::string str) {
-    unsigned long long posOfFirstAt = str.find_first_of('@'), posOfLastAt = str.find_last_of('@');
-    if (posOfFirstAt != posOfLastAt || posOfFirstAt == std::string::npos) {
-        return false;
-    }
-
-    unsigned long long posOfLastDot = str.find_last_of('.');
-    if (posOfLastDot == str.size() - 1 || posOfLastDot == std::string::npos) {
-        return false;
-    }
-
-    if (posOfLastDot == posOfLastAt + 1) {
-        return false;
-    }
-    return true;
-}
-
-bool MainWindow::isValidName(std::string str) {
-    return !str.empty();
-}
-
-bool MainWindow::isValidPassword(std::string str1, std::string str2) {
-    return !str1.empty() && str1 == str2;
 }

@@ -22,14 +22,6 @@ public:
 
     static void enterEmail();
 
-    static bool isValidName(std::string);
-
-    static bool isValidTelephone(std::string);
-
-    static bool isValidEmail(std::string);
-
-    static bool isValidPassword(std::string, std::string);
-
 private:
     Ui::MainWindow *ui;
 };

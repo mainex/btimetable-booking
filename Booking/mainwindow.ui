@@ -485,7 +485,7 @@
         <item row="1" column="0">
          <widget class="QLabel" name="enterEmailLabel">
           <property name="text">
-           <string>E-mail (example@domain.com):</string>
+           <string>E-mail:</string>
           </property>
          </widget>
         </item>
@@ -510,7 +510,7 @@
         <item row="2" column="0">
          <widget class="QLabel" name="enterTelephoneLabel">
           <property name="text">
-           <string>Telephone Number (+7-XXX-XXX-XX-XX):</string>
+           <string>Telephone number (+7-XXX-XXX-XX-XX):</string>
           </property>
          </widget>
         </item>
@@ -593,11 +593,17 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>Accept</string>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <layout class="QFormLayout" name="formLayout">
