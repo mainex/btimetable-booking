@@ -28,6 +28,8 @@ public:
     static void addOrderToTableView(QStandardItem*, QStandardItemModel*, int&, db::Order&, db::Company&, db::Employee&, const time_t&, const time_t&, bool);
     static void createTableView(QStandardItemModel*, QStringList&, QTableView*, const int&);
     std::string to_string(db::Order&, db::Employee&, db::Company&);
+    static void errorProcessing();
+
 private:
     Ui::ChoiceWindow *ui;
 };
