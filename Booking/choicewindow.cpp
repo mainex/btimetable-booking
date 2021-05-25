@@ -135,7 +135,7 @@ void ChoiceWindow::update() {
         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
         auto company = db::ClientAPI::getCompanyById(order.companyId);
         const time_t timeStart = order.timeStart, timeFinish = order.duration + order.timeStart;
-        if (timeFinish < time(NULL)){
+        if (timeFinish > std::time(0)){
             addOrderToTableView(item, modelFutureOrders, rowF, order, company, master, timeStart, timeFinish);
         } else {
             addOrderToTableView(item, modelCompletedOrders, rowC, order, company, master, timeStart, timeFinish, true);
