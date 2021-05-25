@@ -13,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
         email = ui->enterEmailLineEdit->text().toUtf8().constData();
         telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
         name = ui->enterNameLineEdit->text().toUtf8().constData();
-        password = ui->enterPasswordLineEdit->text().toUtf8().constData();
+        std::hash<std::string> h;
+        const size_t hashedPassword = h(ui->enterPasswordLineEdit->text().toUtf8().constData());
+        password = std::to_string(hashedPassword);
         if(isValidTelephone(telephone)) {
             ui->isTelephoneOkLabel->setText("Good");
         } else {
@@ -52,7 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(ui->enterButton, &QPushButton::clicked, [this] {
-        password = ui->enterPasswordForAuthorizationLineEdit_2->text().toUtf8().constData();
+        std::hash<std::string> h;
+        const size_t hashedPassword = h(ui->enterPasswordForAuthorizationLineEdit_2->text().toUtf8().constData());
+        password = std::to_string(hashedPassword);
         telephone = ui->enterTelephoneForAuthorizationLineEdit->text().toUtf8().constData();
         long long id = db::ClientAPI::authorizeClient(telephone, password);
         ChoiceWindow *w = new ChoiceWindow(id, nullptr);
