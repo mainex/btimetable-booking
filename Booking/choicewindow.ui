@@ -65,11 +65,11 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="futureOrdersTab">
        <attribute name="title">
         <string>Future orders</string>
        </attribute>
-       <widget class="QTableView" name="tableView">
+       <widget class="QTableView" name="futureOrdersTableView">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -80,10 +80,20 @@
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="completedOrdersTab">
        <attribute name="title">
         <string>Completed orders</string>
        </attribute>
+       <widget class="QTableView" name="completedOrdersTableView">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>80</y>
+          <width>256</width>
+          <height>192</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>

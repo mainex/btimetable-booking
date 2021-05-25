@@ -1,11 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QStandardItemModel"
-#include "QStandardItem"
-#include <QMessageBox>
-#include "QDebug"
-#include "ClientAPI.h"
-#include <iostream>
 #include "choicewindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->enterPasswordLineEdit->setEchoMode(QLineEdit::Password);
-    ui->enterTelephoneForAuthorizationLineEdit->setEchoMode(QLineEdit::Password);
+    ui->enterPasswordForAuthorizationLineEdit_2->setEchoMode(QLineEdit::Password);
     connect(ui->pushButton, &QPushButton::clicked, [this]{
         email = ui->enterEmailLineEdit->text().toUtf8().constData();
         telephone = ui->enterTelephoneLineEdit->text().toUtf8().constData();
@@ -58,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     connect(ui->enterButton, &QPushButton::clicked, [this] {
-        password = ui->enterPasswordForAuthorizationLineEdit->text().toUtf8().constData();
+        password = ui->enterPasswordForAuthorizationLineEdit_2->text().toUtf8().constData();
         telephone = ui->enterTelephoneForAuthorizationLineEdit->text().toUtf8().constData();
         long long id = db::ClientAPI::authorizeClient(telephone, password);
         ChoiceWindow *w = new ChoiceWindow(id, nullptr);
