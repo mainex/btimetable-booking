@@ -1,5 +1,6 @@
 #include "choicewindow.h"
 #include "ui_choicewindow.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 
 ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
@@ -41,12 +42,18 @@ ChoiceWindow::ChoiceWindow(const int idOfClient, QWidget *parent) :
                     update();
                 }
             }
-        });
+      });
 
-        connect(ui->applyFiltersButton, &QPushButton::clicked, [this](){
+      connect(ui->actionExit, &QAction::triggered, [this](){
+          close();
+      });
 
-            update();
-        });
+      connect(ui->actionLogOut, &QAction::triggered, [this](){
+          MainWindow *w = new MainWindow;
+          close();
+          w->show();
+      });
+        
     }
     catch(...) {
         errorProcessing();
