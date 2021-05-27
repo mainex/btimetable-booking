@@ -17,9 +17,9 @@ class ChoiceWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit ChoiceWindow(const long long, QWidget *parent = nullptr);
+    explicit ChoiceWindow(const std::string, QWidget *parent = nullptr);
     ~ChoiceWindow();
-    const long long clientId;
+    std::string clientToken;
     int rowF = 0, rowC = 0;
     QStandardItem *item;
     QStandardItemModel *modelFutureOrders, *modelCompletedOrders;

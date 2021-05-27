@@ -4,8 +4,22 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <exception>
+#include <stdexcept>
 
 namespace db {
+
+struct bttError : std::runtime_error {
+    explicit bttError(const std::string &m)
+            : std::runtime_error(m) {
+    }
+};
+
+struct bttFatalError : bttError {
+    explicit bttFatalError(const std::string &m)
+            : bttError(m) {
+    }
+};
 
 enum sortParam {
     byId,
@@ -18,29 +32,30 @@ enum sortParam {
 };
 
 class Employee {
-private:
 public:
     const long long id;
     long long companyId;
     std::string fullName;
     double rating;
     long long ratingCnt;
+    bool isDeleted;
 
     Employee(long long id_,
              long long companyId_,
              std::string fullName_,
              double rating_,
-             long long ratingCnt_)
+             long long ratingCnt_,
+             bool isDeleted_)
         : id(id_),
           companyId(companyId_),
           fullName(std::move(fullName_)),
           rating(rating_),
-          ratingCnt(ratingCnt_) {
+          ratingCnt(ratingCnt_),
+          isDeleted(isDeleted_) {
     }
 };
 
 class Client {
-private:
 public:
     const long long id;
     std::string fullName;
@@ -59,7 +74,6 @@ public:
 };
 
 class Order {
-private:
 public:
     enum statusEnum { vacant = 0, deleted = -1, booked = 1 };
 
@@ -72,24 +86,6 @@ public:
     long long employeeId;
     statusEnum status = vacant;
     int rating;
-
-    Order(long long id_,
-          long long companyId_,
-          std::string title_,
-          long long timeStart_,
-          long long duration_,
-          long long employeeId_,
-          statusEnum status_,
-          int rating_)
-        : id(id_),
-          companyId(companyId_),
-          title(std::move(title_)),
-          timeStart(timeStart_),
-          duration(duration_),
-          employeeId(employeeId_),
-          status(status_),
-          rating(rating_) {
-    }
 
     Order(long long id_,
           long long companyId_,
@@ -113,7 +109,6 @@ public:
 };
 
 class Company {
-private:
 public:
     const long long id;
     std::string name;

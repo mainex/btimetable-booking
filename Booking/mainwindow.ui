@@ -610,7 +610,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Doy you already have an account? Enter your telephone number:</string>
+         <string>Doy you already have an account? Enter your telephone number (+7-XXX-XXX-XX-XX):</string>
         </property>
        </widget>
       </item>
