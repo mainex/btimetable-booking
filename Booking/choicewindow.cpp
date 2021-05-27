@@ -35,7 +35,29 @@ ChoiceWindow::ChoiceWindow(const long long idOfClient, QWidget *parent) :
         });
 
         connect(ui->applyFiltersButton, &QPushButton::clicked, [this](){
-            showVacantOrders(ui->companyComboBox->itemData(ui->companyComboBox->currentIndex()).toLongLong(), ui->masterComboBox->itemData(ui->masterComboBox->currentIndex()).toLongLong());
+            auto companyId = ui->companyComboBox->itemData(ui->companyComboBox->currentIndex()).toLongLong();
+            auto masterId = ui->masterComboBox->itemData(ui->masterComboBox->currentIndex()).toLongLong();
+            showVacantOrders(companyId, masterId);
+            if (companyId > 0) {
+                auto company = db::ClientAPI::getCompanyById(companyId);
+                if (company.rating >0) {
+                    ui->companyRatingLabel->setText(QString(("Rating: " + std::to_string(company.rating)).c_str()));
+                } else {
+                    ui->companyRatingLabel->setText(QString("No rating yet"));
+                }
+            } else {
+                ui->companyRatingLabel->setText(QString(""));
+            }
+            if (masterId > 0) {
+                auto master = db::ClientAPI::getEmployeeById(masterId);
+                if (master.rating >0) {
+                    ui->masterRatingLabel->setText(QString(("Rating: " + std::to_string(master.rating)).c_str()));
+                } else {
+                    ui->masterRatingLabel->setText(QString("No rating yet"));
+                }
+            } else {
+                ui->masterRatingLabel->setText(QString(""));
+            }
         });
 
         connect(ui->futureOrdersTableView, &QTableView::doubleClicked, [&](const QModelIndex& index){
