@@ -55,17 +55,41 @@ ChoiceWindow::ChoiceWindow(const long long idOfClient, QWidget *parent) :
                     db::ClientAPI::cancelOrder(id);
                 }
             }
-      });
+        });
 
-      connect(ui->actionExit, &QAction::triggered, [this](){
-          close();
-      });
+        connect(ui->completedOrdersTableView, &QTableView::doubleClicked, [&](const QModelIndex& index){
+            if (index.column() == 5){
+                long long id = atoll(ui->completedOrdersTableView->model()->data(ui->completedOrdersTableView->model()->index(index.row(), 6)).toString().toUtf8().constData());
+                auto order = db::ClientAPI::getOrderById(id);
+                if (order.rating < 1){
+                    auto master = db::ClientAPI::getEmployeeById(order.employeeId);
+                    auto company = db::ClientAPI::getCompanyById(order.companyId);
+                    QMessageBox msgBox;
+                    msgBox.setInformativeText(("Rate this order: " + to_string(order, master, company)).c_str());
+                    QAbstractButton* pButton1 = msgBox.addButton(tr("1"), QMessageBox::NoRole);
+                    QAbstractButton* pButton2 = msgBox.addButton(tr("2"), QMessageBox::NoRole);
+                    QAbstractButton* pButton3 = msgBox.addButton(tr("3"), QMessageBox::NoRole);
+                    QAbstractButton* pButton4 = msgBox.addButton(tr("4"), QMessageBox::NoRole);
+                    QAbstractButton* pButton5 = msgBox.addButton(tr("5"), QMessageBox::NoRole);
+                    msgBox.exec();
+                    int rating = atoi(msgBox.clickedButton()->text().toStdString().c_str());
+                    db::ClientAPI::rateOrder(id, rating);
+                    item = new QStandardItem(QString(std::to_string(rating).c_str()));
+                    modelCompletedOrders->setItem(index.row(), index.column(), item);
+                    ui->completedOrdersTableView->setModel(modelCompletedOrders);
+                }
+            }
+        });
 
-      connect(ui->actionLogOut, &QAction::triggered, [this](){
-          MainWindow *w = new MainWindow;
-          close();
-          w->show();
-      });
+        connect(ui->actionExit, &QAction::triggered, [this](){
+            close();
+        });
+
+        connect(ui->actionLogOut, &QAction::triggered, [this](){
+            MainWindow *w = new MainWindow;
+            close();
+            w->show();
+        });
         
     }
     catch(...) {
@@ -178,16 +202,21 @@ void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *
     model->setItem(i, 4, item);
 
     if (comments){
-        item = new QStandardItem(QString("Leave a comment"));
+        if(order.rating < 1) {
+            item = new QStandardItem(QString("Rate"));
+        } else {
+            item = new QStandardItem(QString(std::to_string(order.rating).c_str()));
+        }
         model->setItem(i, 5, item);
     } else {
         item = new QStandardItem(QString("Cancel"));
         model->setItem(i, 5, item);
-        item = new QStandardItem(QString(std::to_string(order.id).c_str()));
-        model->setItem(i, 6, item);
     }
 
-    if (false){
+    item = new QStandardItem(QString(std::to_string(order.id).c_str()));
+    model->setItem(i, 6, item);
+
+    if (order.status == db::Order::deleted){
         for (int j = 0; j < 5 + comments; ++j){
             model->setData(model->index(i, j), QColor(Qt::gray), Qt::BackgroundRole);
         }
@@ -236,7 +265,7 @@ void ChoiceWindow::updateTableViews() {
             auto master = db::ClientAPI::getEmployeeById(order.employeeId);
             auto company = db::ClientAPI::getCompanyById(order.companyId);
             const time_t timeStart = order.timeStart, timeFinish = order.duration + order.timeStart;
-            if (timeFinish < time(NULL)){
+            if (timeFinish > time(NULL)){
                 addOrderToTableView(item, modelFutureOrders, rowF, order, company, master, timeStart, timeFinish);
             } else {
                 addOrderToTableView(item, modelCompletedOrders, rowC, order, company, master, timeStart, timeFinish, true);
@@ -247,8 +276,10 @@ void ChoiceWindow::updateTableViews() {
         createTableView(modelFutureOrders, horizontalHeader, ui->futureOrdersTableView, bookedOrders.size());
         ui->futureOrdersTableView->setColumnHidden(6, true);
         horizontalHeader.pop_back();
-        horizontalHeader.append("My comments");
+        horizontalHeader.append("My rate");
         createTableView(modelCompletedOrders, horizontalHeader, ui->completedOrdersTableView, bookedOrders.size());
+        ui->completedOrdersTableView->setColumnHidden(6, true);
+
     }
     catch(...){
         errorProcessing();

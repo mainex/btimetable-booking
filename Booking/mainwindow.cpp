@@ -9,15 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     try{
         ui->setupUi(this);
-        auto l = db::ClientAPI::listCompanies();
-        for (auto h : l) {
-            auto r = db::ClientAPI::listEmployeesOfCompany(h);
-            for (auto y : r) {
-                auto d = db::ClientAPI::listOrders(h, y, db::Order::booked);
-                for (auto s : d)
-                    db::ClientAPI::cancelOrder(s);
-            }
-        }
         ui->enterPasswordLineEdit->setEchoMode(QLineEdit::Password);
         ui->enterPasswordAgainLineEdit->setEchoMode(QLineEdit::Password);
         ui->enterPasswordForAuthorizationLineEdit->setEchoMode(QLineEdit::Password);
