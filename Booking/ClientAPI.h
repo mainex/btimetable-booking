@@ -6,41 +6,54 @@
 namespace db {
 class ClientAPI {
 public:
-    static Client createClient(const std::string &phoneNumber,
-                               const std::string &password,
-                               const std::string &fullName,
-                               const std::string &email);
+    static std::string createClient(const std::string &phoneNumber,
+                                    const std::string &password,
+                                    const std::string &fullName,
+                                    const std::string &email);
 
-    static long long authorizeClient(const std::string &phoneNumber,
-                                     const std::string &password);
+    static std::string authorizeClient(const std::string &phoneNumber,
+                                       const std::string &password);
 
     static std::vector<long long> listCompanies();
 
-    static std::vector<long long> listVacantOrdersOfCompany(long long id);
+    static std::vector<long long> listOrders(long long companyId,
+                                             long long employeeId,
+                                             Order::statusEnum status,
+                                             long long leastTimeStart = 0,
+                                             long long leastDuration = 0,
+                                             sortParam sortBy = byId,
+                                             bool reversed = true);
 
-    static std::vector<long long> listEmployeesOfCompany(long long id);
+    static std::vector<long long> listVacantOrdersOfCompany(
+        long long companyId);
 
-    static void bookOrder(long long orderId, long long clientId);
+    static std::vector<long long> listEmployeesOfCompany(long long companyId);
 
-    static void cancelOrder(long long orderId);
+    static void bookOrder(const std::string &token, long long orderId);
 
-    static Client getClientById(long long id);
+    static void cancelOrder(const std::string &token, long long orderId);
 
-    static Order getOrderById(long long id);
+    static void rateOrder(const std::string &token,
+                          long long orderId,
+                          int rating);
 
-    static Employee getEmployeeById(long long id);
+    static Client getClient(const std::string &token);
 
-    static Company getCompanyById(long long id);
+    static Order getOrderById(const std::string &token, long long orderId);
 
-    static void changeClientFullName(long long id, std::string fullName);
+    static Employee getEmployeeById(long long employeeId);
 
-    static void changeClientPhoneNumber(long long id, std::string phoneNumber);
+    static Company getCompanyById(long long companyId);
 
-    static void changeClientEmail(long long id, std::string email);
+    static void changeClientFullName(const std::string &token,
+                                     std::string fullName);
 
-    static std::vector<long long> listOrdersOfClient(long long id);
+    static void changeClientEmail(const std::string &token, std::string email);
 
-    static std::vector<long long> listVacantOrdersOfEmployee(long long id);
+    static std::vector<long long> listOrdersOfClient(const std::string &token);
+
+    static std::vector<long long> listVacantOrdersOfEmployee(
+        long long employeeId);
 };
 }  // namespace db
 

@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    int id;
+    long long id;
     std::string email, name, password, passwordAgain, telephone;
     static void enterId();
 
