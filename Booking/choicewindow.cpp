@@ -2,6 +2,7 @@
 #include "ui_choicewindow.h"
 #include "mainwindow.h"
 #include <QMessageBox>
+#include <iostream>
 
 ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
     QMainWindow(parent),
@@ -11,8 +12,8 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
     try{
         ui->setupUi(this);
         auto client = db::ClientAPI::getClient(clientToken);
-        ui->label_4->setText(QString(client.fullName.c_str()));
-        ui->label_2->setText(QString((client.phoneNumber + "\n" + client.email).c_str()));
+        ui->label_4->setText(client.fullName.c_str());
+        ui->label_2->setText((client.phoneNumber + "\n" + client.email).c_str());
         modelFutureOrders = new QStandardItemModel, modelCompletedOrders = new QStandardItemModel;
         rowF = 0, rowC = 0;
 
@@ -26,7 +27,7 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
                 auto company = db::ClientAPI::getCompanyById(order.companyId);
                 const time_t timeStart = order.timeStart, timeFinish = order.duration + order.timeStart;
                 db::ClientAPI::bookOrder(clientToken, order.id);
-                QMessageBox::information(this, QString("Booking completed!"), QString((client.fullName + ", you booked: " + to_string(order, master, company)).c_str()));
+                QMessageBox::information(this, "Booking completed!", (client.fullName + ", you booked: " + to_string(order, master, company)).c_str());
                 ui->orderComboBox->removeItem(ui->orderComboBox->currentIndex());
                 if (timeFinish < time(0)) {
                     addOrderToTableView(item, modelCompletedOrders, rowC, order, company, master, timeStart, timeFinish, true);
@@ -34,8 +35,14 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
                     addOrderToTableView(item, modelFutureOrders, rowF, order, company, master, timeStart, timeFinish, false);
                 }
             }
-            catch(...){
-                QMessageBox::information(this, QString("Error!"), QString("Error"));
+            catch (const db::bttFatalError& fatalErr){
+                close();
+            }
+            catch (const db::bttError& err){
+                QMessageBox::information(this, QString("Error!"), QString(err.what()));
+            }
+            catch (...){
+                QMessageBox::information(this, QString("Error!"), QString("Error!"));
             }
         });
 
@@ -43,31 +50,41 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
             try{
                 auto companyId = ui->companyComboBox->itemData(ui->companyComboBox->currentIndex()).toLongLong();
                 auto masterId = ui->masterComboBox->itemData(ui->masterComboBox->currentIndex()).toLongLong();
-                auto date = ui->dateEdit->time().toString();
-                showVacantOrders(companyId, masterId);
+                time_t timeStartFrom = ui->dateTimeEditFrom->dateTime().toSecsSinceEpoch() + 10800;
+                time_t timeStartTo = ui->dateTimeEditTo->dateTime().toSecsSinceEpoch() + 10800;
+                time_t durationFrom = QTime(0, 0, 0).secsTo(ui->timeEditFrom->time());
+                time_t durationTo = QTime(0, 0, 0).secsTo(ui->timeEditTo->time());
+                QMessageBox::information(this, "", std::to_string(durationTo).c_str());
+                showVacantOrders(companyId, masterId, db::sortParam::byTimeStart, timeStartFrom, timeStartTo, durationFrom, durationTo);
                 if (companyId > 0) {
                     auto company = db::ClientAPI::getCompanyById(companyId);
-                    if (company.rating >0) {
-                        ui->companyRatingLabel->setText(QString(("Rating: " + std::to_string(company.rating)).c_str()));
+                    if (company.rating > 0) {
+                        ui->companyRatingLabel->setText(("Rating: " + std::to_string(company.rating)).c_str());
                     } else {
-                        ui->companyRatingLabel->setText(QString("No rating yet"));
+                        ui->companyRatingLabel->setText("No rating yet");
                     }
                 } else {
-                    ui->companyRatingLabel->setText(QString(""));
+                    ui->companyRatingLabel->setText("");
                 }
                 if (masterId > 0) {
                     auto master = db::ClientAPI::getEmployeeById(masterId);
                     if (master.rating >0) {
-                        ui->masterRatingLabel->setText(QString(("Rating: " + std::to_string(master.rating)).c_str()));
+                        ui->masterRatingLabel->setText(("Rating: " + std::to_string(master.rating)).c_str());
                     } else {
-                        ui->masterRatingLabel->setText(QString("No rating yet"));
+                        ui->masterRatingLabel->setText("No rating yet");
                     }
                 } else {
-                    ui->masterRatingLabel->setText(QString(""));
+                    ui->masterRatingLabel->setText("");
                 }
             }
-            catch(...){
-                QMessageBox::information(this, QString("Error!"), QString("Error"));
+            catch (const db::bttFatalError& fatalErr){
+                close();
+            }
+            catch (const db::bttError& err){
+                QMessageBox::information(this, QString("Error!"), QString(err.what()));
+            }
+            catch (...){
+                QMessageBox::information(this, QString("Error!"), QString("Error!"));
             }
         });
 
@@ -89,8 +106,14 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
                         db::ClientAPI::cancelOrder(clientToken, id);
                     }
                 }
-                catch(...){
-                    QMessageBox::information(this, QString("Error!"), QString("Error"));
+                catch (const db::bttFatalError& fatalErr){
+                    close();
+                }
+                catch (const db::bttError& err){
+                    QMessageBox::information(this, QString("Error!"), QString(err.what()));
+                }
+                catch (...){
+                    QMessageBox::information(this, QString("Error!"), QString("Error!"));
                 }
             }
         });
@@ -113,13 +136,19 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
                         msgBox.exec();
                         int rating = atoi(msgBox.clickedButton()->text().toStdString().c_str());
                         db::ClientAPI::rateOrder(clientToken, id, rating);
-                        item = new QStandardItem(QString(std::to_string(rating).c_str()));
+                        item = new QStandardItem(std::to_string(rating).c_str());
                         modelCompletedOrders->setItem(index.row(), index.column(), item);
                         ui->completedOrdersTableView->setModel(modelCompletedOrders);
                     }
                 }
-                catch(...){
-                    QMessageBox::information(this, QString("Error!"), QString("Error"));
+                catch (const db::bttFatalError& fatalErr){
+                    close();
+                }
+                catch (const db::bttError& err){
+                    QMessageBox::information(this, QString("Error!"), QString(err.what()));
+                }
+                catch (...){
+                    QMessageBox::information(this, QString("Error!"), QString("Error!"));
                 }
             }
         });
@@ -135,52 +164,68 @@ ChoiceWindow::ChoiceWindow(const std::string tokenOfClient, QWidget *parent) :
         });
         
     }
-    catch(...) {
-        errorProcessing();
+    catch (const db::bttFatalError& fatalErr){
+        close();
+    }
+    catch (const db::bttError& err){
+        QMessageBox::information(this, QString("Error!"), QString(err.what()));
+    }
+    catch (...){
+        QMessageBox::information(this, QString("Error!"), QString("Error!"));
     }
 }
 
-void ChoiceWindow::showVacantOrders(long long companyId, long long employeeId, long long leastTimeStart, long long leastDuration, db::sortParam sortBy, bool reversed){
+void ChoiceWindow::showVacantOrders(long long companyId, long long employeeId, db::sortParam sorted, long long minTimeStart,long long maxTimeStart, long long minDuration, long long maxDuration){
+    ui->orderComboBox->clear();
+    std::vector<long long> companies;
     try{
-        ui->orderComboBox->clear();
-        std::vector<long long> companies;
-        try{
-            if(companyId == -1){
-                companies = db::ClientAPI::listCompanies();
-            } else {
-                companies.push_back(companyId);
-            }
-            for (size_t i = 0; i < companies.size(); ++i) {
-                auto company = db::ClientAPI::getCompanyById(companies[i]);
-                std::vector<long long> orders;
-                if (employeeId == -1) {
-                    for (auto master : db::ClientAPI::listEmployeesOfCompany(companies[i])){
-                        orders = db::ClientAPI::listOrders(companies[i], master, db::Order::vacant, leastTimeStart, leastDuration, sortBy, reversed);
-                        for (size_t k = 0; k < orders.size(); ++k) {
-                            auto order = db::ClientAPI::getOrderById(clientToken, orders[k]);
-                            auto master = db::ClientAPI::getEmployeeById(order.employeeId);
-                            std::string str = to_string(order, master, company);
-                            ui->orderComboBox->addItem(QString(str.c_str()), QVariant(order.id));
-                        }
-                    }
-                } else {
-                    orders = db::ClientAPI::listOrders(companies[i], employeeId, db::Order::vacant, leastTimeStart, leastDuration, sortBy, reversed);
+        db::orderSearchParams params = {companyId,
+                                        employeeId,
+                                        db::byTimeStart,
+                                        "",
+                                        minTimeStart,
+                                        maxTimeStart,
+                                        minDuration,
+                                        maxDuration};
+        if(companyId == -1){
+            companies = db::ClientAPI::listCompanies();
+        } else {
+            companies.push_back(companyId);
+        }
+        for (size_t i = 0; i < companies.size(); ++i) {
+            params.companyId = companies[i];
+            auto company = db::ClientAPI::getCompanyById(companies[i]);
+            std::vector<long long> orders;
+            if (employeeId == -1) {
+                for (auto master : db::ClientAPI::listEmployeesOfCompany(companies[i])){
+                    params.employeeId = master;
+                    orders = db::ClientAPI::listOrders(params);
                     for (size_t k = 0; k < orders.size(); ++k) {
                         auto order = db::ClientAPI::getOrderById(clientToken, orders[k]);
                         auto master = db::ClientAPI::getEmployeeById(order.employeeId);
                         std::string str = to_string(order, master, company);
-                        ui->orderComboBox->addItem(QString(str.c_str()), QVariant(order.id));
+                        ui->orderComboBox->addItem(str.c_str(), QVariant(order.id));
                     }
+                }
+            } else {
+                orders = db::ClientAPI::listOrders(params);
+                for (size_t k = 0; k < orders.size(); ++k) {
+                    auto order = db::ClientAPI::getOrderById(clientToken, orders[k]);
+                    auto master = db::ClientAPI::getEmployeeById(order.employeeId);
+                    std::string str = to_string(order, master, company);
+                    ui->orderComboBox->addItem(str.c_str(), QVariant(order.id));
                 }
             }
         }
-        catch(...){
-            QMessageBox::information(this, QString("Error!"), QString("Error"));
-        }
     }
-    catch(...)
-    {
-        errorProcessing();
+    catch (const db::bttFatalError& fatalErr){
+        close();
+    }
+    catch (const db::bttError& err){
+        QMessageBox::information(this, QString("Error!"), QString(err.what()));
+    }
+    catch (...){
+        QMessageBox::information(this, QString("Error!"), QString("Error!"));
     }
 }
 
@@ -193,10 +238,15 @@ void ChoiceWindow::showCompanies() {
             std::string str = company.name;
             ui->companyComboBox->addItem(QString(str.c_str()), QVariant(company.id));
         }
-    }\
-    catch(...)
-    {
-        errorProcessing();
+    }
+    catch (const db::bttFatalError& err){
+        close();
+    }
+    catch (const db::bttError& err){
+        QMessageBox::information(this, QString("Error!"), QString(err.what()));
+    }
+    catch (...){
+        QMessageBox::information(this, QString("Error!"), QString("Error!"));
     }
 }
 
@@ -213,17 +263,22 @@ void ChoiceWindow::showMasters() {
             }
         }
     }
-    catch(...)
-    {
-        errorProcessing();
+    catch (const db::bttFatalError& fatalErr){
+        close();
+    }
+    catch (const db::bttError& err){
+        QMessageBox::information(this, QString("Error!"), QString(err.what()));
+    }
+    catch (...){
+        QMessageBox::information(this, QString("Error!"), QString("Error!"));
     }
 }
 
 void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *model, int &i, db::Order &order, db::Company &company, db::Employee &master, const time_t& timeStart, const time_t& timeFinish, bool comments = false){
-    item = new QStandardItem(QString(order.title.c_str()));
+    item = new QStandardItem(order.title.c_str());
     model->setItem(i, 0, item);
 
-    item = new QStandardItem(QString(company.name.c_str()));
+    item = new QStandardItem(company.name.c_str());
     if (company.rating > 0) {
         item->setToolTip(QString(std::to_string(company.rating).c_str()));
     } else {
@@ -241,7 +296,7 @@ void ChoiceWindow::addOrderToTableView(QStandardItem *item, QStandardItemModel *
 
     std::string timeStartStr = asctime(gmtime(&timeStart));
     timeStartStr.pop_back();
-    item = new QStandardItem(QString(timeStartStr.c_str()));
+    item = new QStandardItem(timeStartStr.c_str());
     model->setItem(i, 3, item);
 
     std::string timeFinishStr = asctime(gmtime(&timeFinish));
@@ -297,8 +352,14 @@ void ChoiceWindow::updateComboBox() {
         ui->orderComboBox->clear();
         showVacantOrders(-1, -1);
     }
-    catch(...){
-        errorProcessing();
+    catch (const db::bttFatalError& fatalErr){
+        close();
+    }
+    catch (const db::bttError& err){
+        QMessageBox::information(this, QString("Error!"), QString(err.what()));
+    }
+    catch (...){
+        QMessageBox::information(this, QString("Error!"), QString("Error!"));
     }
 }
 
@@ -329,8 +390,14 @@ void ChoiceWindow::updateTableViews() {
         ui->completedOrdersTableView->setColumnHidden(6, true);
 
     }
-    catch(...){
-        errorProcessing();
+    catch (const db::bttFatalError& fatalErr){
+        close();
+    }
+    catch (const db::bttError& err){
+        QMessageBox::information(this, QString("Error!"), QString(err.what()));
+    }
+    catch (...){
+        QMessageBox::information(this, QString("Error!"), QString("Error!"));
     }
 }
 std::string ChoiceWindow::to_string(db::Order &order, db::Employee& master, db::Company& company) {
@@ -341,9 +408,6 @@ std::string ChoiceWindow::to_string(db::Order &order, db::Employee& master, db::
     return order.title + " in " + company.name + " (from " + timeS + " to " + timeF + "), master " + master.fullName;
 }
 
-void ChoiceWindow::errorProcessing(){
-    QMessageBox::information(this, QString("Error!"), QString("Error"));
-}
 ChoiceWindow::~ChoiceWindow()
 {
     delete ui;
