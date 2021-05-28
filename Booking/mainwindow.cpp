@@ -61,8 +61,14 @@ MainWindow::MainWindow(QWidget *parent)
                 close();
                 w->show();
             }
-            catch(...){
-                QMessageBox::information(this, QString("Error!"), QString("Error"));
+            catch (const db::bttFatalError& fatalErr){
+                close();
+            }
+            catch (const db::bttError& err){
+                QMessageBox::information(this, QString("Error!"), QString(err.what()));
+            }
+            catch (...){
+                QMessageBox::information(this, QString("Error!"), QString("Error!"));
             }
         } else {
             ui->label->setText("Check information, please, registration did not complete.");
@@ -80,8 +86,14 @@ MainWindow::MainWindow(QWidget *parent)
             close();
             w->show();
         }
-        catch(...){
-            QMessageBox::information(this, QString("Error!"), QString("Error"));
+        catch (const db::bttFatalError& fatalErr){
+            close();
+        }
+        catch (const db::bttError& err){
+            QMessageBox::information(this, QString("Error!"), QString(err.what()));
+        }
+        catch (...){
+            QMessageBox::information(this, QString("Error!"), QString("Error!"));
         }
     });
 

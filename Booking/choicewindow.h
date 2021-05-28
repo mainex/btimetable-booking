@@ -27,13 +27,12 @@ public:
     void updateComboBox();
     void updateTableViews();
     void globalUpdate();
-    void showVacantOrders(long long companyId, long long employeeId, long long leastTimeStart = 0, long long leastDuration = 0, db::sortParam sortBy = db::byId, bool reversed = true);
+    void showVacantOrders(long long companyId, long long employeeId, db::sortParam sorted = db::sortParam::byTimeStart,long long minTimeStart = 0,long long maxTimeStart = -1, long long minDuration = 0, long long maxDuration = -1);
     void showMasters();
     void showCompanies();
     static void addOrderToTableView(QStandardItem*, QStandardItemModel*, int&, db::Order&, db::Company&, db::Employee&, const time_t&, const time_t&, bool);
     static void createTableView(QStandardItemModel*, QStringList&, QTableView*, const int&);
     std::string to_string(db::Order&, db::Employee&, db::Company&);
-    void errorProcessing();
 
 private:
     Ui::ChoiceWindow *ui;
