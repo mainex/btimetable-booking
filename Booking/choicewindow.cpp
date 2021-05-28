@@ -432,10 +432,9 @@ void ChoiceWindow::addOrderToTableView(QStandardItem* item, QStandardItemModel* 
 
     item = new QStandardItem(std::to_string(order.id).c_str());
     model->setItem(i, 6, item);
-
     if (order.status == db::Order::deleted)
     {
-        for (int j = 0; j < 5 + comments; ++j)
+        for (int j = 0; j < 5; ++j)
         {
             model->setData(model->index(i, j), QColor(Qt::gray), Qt::BackgroundRole);
         }
@@ -447,11 +446,13 @@ void ChoiceWindow::createTableView(
         QStandardItemModel* model, QStringList& horizontalHeader, QTableView* tableView)
 {
     model->setHorizontalHeaderLabels(horizontalHeader);
+    tableView->setColumnHidden(6, true);
     tableView->setModel(model);
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tableView->resizeRowsToContents();
     tableView->resizeColumnsToContents();
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableView->setColumnHidden(6, true);
 }
 
 void ChoiceWindow::globalUpdate()
@@ -515,10 +516,12 @@ void ChoiceWindow::updateTableViews()
 
         horizontalHeader.append(
                     QList<QString>({ "Event", "Company", "Master", "Start", "Finish", "Status" }));
+        ui->completedOrdersTableView->setColumnHidden(6, true);
         createTableView(modelFutureOrders, horizontalHeader, ui->futureOrdersTableView);
-        ui->futureOrdersTableView->setColumnHidden(6, true);
+        ui->completedOrdersTableView->setColumnHidden(6, true);
         horizontalHeader.pop_back();
         horizontalHeader.append("My rate");
+        ui->completedOrdersTableView->setColumnHidden(6, true);
         createTableView(modelCompletedOrders, horizontalHeader, ui->completedOrdersTableView);
         ui->completedOrdersTableView->setColumnHidden(6, true);
     }
